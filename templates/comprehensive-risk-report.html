@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>総合リスクレポート - {{companyName}}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Meiryo', 'Yu Gothic', sans-serif;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+
+        .report-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .report-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .report-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .report-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .report-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .report-body {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .overview-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .overview-card h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .overview-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .league-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .league-badge {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .league-info h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .league-stats {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .chart-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .insurance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .insurance-card {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            border-radius: 6px;
+            padding: 15px;
+        }
+
+        .insurance-card.insufficient {
+            background: #fff3cd;
+            border-color: #ffc107;
+        }
+
+        .insurance-card.not-covered {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .insurance-type {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .insurance-amount {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .risk-history {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-date {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .history-action {
+            font-weight: 500;
+        }
+
+        .history-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-ongoing {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .guild-info {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .guild-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .guild-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+
+        .guild-stat {
+            text-align: center;
+        }
+
+        .guild-stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .guild-stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .assessment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .assessment-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .assessment-category {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .assessment-level {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .assessment-stars {
+            color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <div class="report-header">
+            <div class="report-title">総合リスクレポート</div>
+            <div class="report-subtitle">企業リスク管理総合評価書</div>
+            <div class="report-meta">
+                <div>企業名: {{companyName}}</div>
+                <div>レポート期間: {{reportPeriod}}</div>
+                <div>発行日: {{issueDate}}</div>
+            </div>
+        </div>
+
+        <div class="report-body">
+            <!-- 概要セクション -->
+            <div class="section">
+                <div class="section-title">📊 リスク管理概要</div>
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <h3>総合リスクスコア</h3>
+                        <div class="overview-value">{{totalRiskScore}}</div>
+                    </div>
+                    <div class="overview-card">
+                        <h3>保険カバレッジ率</h3>
+                        <div class="overview-value">{{insuranceCoverage}}%</div>
+                    </div>
+                    <div class="overview-card">
+                        <h3>リスク対策実施数</h3>
+                        <div class="overview-value">{{riskMitigationCount}}件</div>
+                    </div>
+                    <div class="overview-card">
+                        <h3>コンプライアンス適合率</h3>
+                        <div class="overview-value">{{complianceRate}}%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- リーグ・ギルド情報 -->
+            <div class="section">
+                <div class="section-title">🏆 リーグ・ギルド情報</div>
+                <div class="league-status">
+                    <div class="league-badge">{{leagueBadge}}</div>
+                    <div class="league-info">
+                        <h3>{{leagueName}}リーグ</h3>
+                        <div class="league-stats">現在LP: {{currentLP}} | 順位: {{currentRank}}位 | 次リーグまで: {{lpToNext}}LP</div>
+                    </div>
+                </div>
+                <div class="guild-info">
+                    <div class="guild-name">{{guildName}}</div>
+                    <div>所属メンバー数: {{guildMemberCount}}社 | ギルド順位: {{guildRank}}位</div>
+                    <div class="guild-stats">
+                        <div class="guild-stat">
+                            <div class="guild-stat-value">{{guildTotalLP}}</div>
+                            <div class="guild-stat-label">合計LP</div>
+                        </div>
+                        <div class="guild-stat">
+                            <div class="guild-stat-value">{{guildAverageLP}}</div>
+                            <div class="guild-stat-label">平均LP</div>
+                        </div>
+                        <div class="guild-stat">
+                            <div class="guild-stat-value">{{guildGrowthRate}}%</div>
+                            <div class="guild-stat-label">成長率</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- リスク体制評価 -->
+            <div class="section">
+                <div class="section-title">📋 リスク体制評価</div>
+                <div class="assessment-grid">
+                    {{#assessments}}
+                    <div class="assessment-item">
+                        <div class="assessment-category">{{category}}</div>
+                        <div class="assessment-level">Lv.{{level}}</div>
+                        <div class="assessment-stars">{{stars}}</div>
+                    </div>
+                    {{/assessments}}
+                </div>
+            </div>
+
+            <!-- 保険加入状況 -->
+            <div class="section">
+                <div class="section-title">🛡️ 保険加入状況</div>
+                <div class="insurance-grid">
+                    {{#insurances}}
+                    <div class="insurance-card {{status}}">
+                        <div class="insurance-type">{{type}}</div>
+                        <div class="insurance-amount">保険金額: {{amount}}</div>
+                        <div class="insurance-amount">カバー範囲: {{coverage}}</div>
+                    </div>
+                    {{/insurances}}
+                </div>
+            </div>
+
+            <!-- リスク推移チャート -->
+            <div class="section">
+                <div class="section-title">📈 過去1年間のリスク推移</div>
+                <div class="chart-container">
+                    <div>リスクスコア推移グラフ<br>（実装時にChart.jsまたは類似ライブラリを使用）<br>{{riskTrendData}}</div>
+                </div>
+            </div>
+
+            <!-- リスク対策実行履歴 -->
+            <div class="section">
+                <div class="section-title">✅ リスク対策実行履歴</div>
+                <div class="risk-history">
+                    {{#riskActions}}
+                    <div class="history-item">
+                        <div>
+                            <div class="history-action">{{action}}</div>
+                            <div class="history-date">{{date}}</div>
+                        </div>
+                        <div class="history-status {{statusClass}}">{{status}}</div>
+                    </div>
+                    {{/riskActions}}
+                </div>
+            </div>
+
+            <!-- 取引先向け評価サマリー -->
+            <div class="section">
+                <div class="section-title">🤝 取引先向け評価サマリー</div>
+                <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; border-left: 4px solid #2196f3;">
+                    <h3 style="color: #1976d2; margin-bottom: 15px;">信頼性評価</h3>
+                    <p style="margin-bottom: 10px;"><strong>リスク管理体制:</strong> {{riskManagementLevel}} - 業界標準を{{standardComparison}}レベル</p>
+                    <p style="margin-bottom: 10px;"><strong>保険適用範囲:</strong> {{insuranceScope}} - 主要リスクに対する十分な保証</p>
+                    <p style="margin-bottom: 10px;"><strong>継続的改善:</strong> {{improvementRecord}} - 過去1年で{{improvementCount}}件の改善施策を実施</p>
+                    <p><strong>業界内位置:</strong> {{industryPosition}} - {{leagueName}}リーグ{{currentRank}}位の実績</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div>本レポートは Risk Lance プラットフォームにより自動生成されています</div>
+            <div>発行者: Risk Lance システム | 連絡先: support@risklance.com</div>
+        </div>
+    </div>
+</body>
+</html>

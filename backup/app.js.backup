@@ -1,0 +1,1047 @@
+// Risk Lance - メインアプリケーション JavaScript
+
+// アプリケーション状態管理
+class RiskLanceApp {
+    constructor() {
+        this.currentUser = null;
+        this.currentScreen = 'dashboard';
+        this.notifications = [];
+        this.insuranceData = [];
+        this.riskData = {};
+        this.businessData = {};
+
+        this.init();
+    }
+
+    init() {
+        console.log('RiskLanceApp init called'); // デバッグ用
+        this.setupEventListeners();
+        this.loadDummyData();
+        this.showLoginScreen();
+    }
+
+    // イベントリスナーの設定
+    setupEventListeners() {
+        // ログインフォーム
+        const loginForm = document.getElementById('login-form');
+        if (loginForm) {
+            loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+        }
+
+        // ログアウトボタン
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => this.handleLogout());
+        }
+
+        // サイドバーメニュー
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.addEventListener('click', (e) => this.handleMenuClick(e));
+        });
+
+        // アクションボタン
+        this.setupActionButtons();
+    }
+
+    // アクションボタンの設定
+    setupActionButtons() {
+        // 保険見直しボタン
+        const actionBtns = document.querySelectorAll('.action-btn');
+        actionBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => this.handleActionClick(e));
+        });
+
+        // おすすめボタン
+        const recommendBtns = document.querySelectorAll('.recommend-btn');
+        recommendBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => this.handleRecommendationClick(e));
+        });
+    }
+
+    // ログイン処理
+    handleLogin(e) {
+        e.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        console.log('ログイン試行:', username, password); // デバッグ用
+
+        // 簡単な認証（デモ用）
+        if (username && password) {
+            this.currentUser = {
+                name: '田中太郎',
+                company: '株式会社サンプル',
+                role: '代表取締役'
+            };
+
+            console.log('ログイン成功、画面切り替え中...'); // デバッグ用
+            this.showMainApp();
+            this.updateUserInterface();
+        } else {
+            alert('ユーザー名とパスワードを入力してください。');
+        }
+    }
+
+    // ログアウト処理
+    handleLogout() {
+        if (confirm('ログアウトしますか？')) {
+            this.currentUser = null;
+            this.showLoginScreen();
+        }
+    }
+
+    // メニュークリック処理
+    handleMenuClick(e) {
+        const menuItem = e.currentTarget;
+        const screenName = menuItem.getAttribute('data-screen');
+
+        if (screenName) {
+            this.switchScreen(screenName);
+            this.updateActiveMenu(menuItem);
+        }
+    }
+
+    // アクションクリック処理
+    handleActionClick(e) {
+        const actionType = e.currentTarget.getAttribute('data-action') || 'default';
+
+        switch (actionType) {
+            case 'fire-insurance':
+                this.showInsuranceDetails('火災保険');
+                break;
+            case 'cyber-security':
+                this.showInsuranceRecommendation('サイバーセキュリティ保険');
+                break;
+            default:
+                this.showActionDialog('対応中', 'この機能は現在開発中です。');
+        }
+    }
+
+    // おすすめクリック処理
+    handleRecommendationClick(e) {
+        const recommendationType = e.currentTarget.getAttribute('data-recommendation') || 'default';
+
+        switch (recommendationType) {
+            case 'cyber-insurance':
+                this.showInsuranceRecommendation('サイバーセキュリティ保険');
+                break;
+            case 'fire-coverage':
+                this.showCoverageReview('火災保険');
+                break;
+            default:
+                this.showRecommendationDialog('詳細情報', 'この保険商品について詳しい情報をご案内します。');
+        }
+    }
+
+    // 画面切り替え
+    switchScreen(screenName) {
+        // 全ての画面を非表示
+        const screens = document.querySelectorAll('.content-screen');
+        screens.forEach(screen => screen.classList.remove('active'));
+
+        // 指定された画面を表示
+        const targetScreen = document.getElementById(screenName);
+        if (targetScreen) {
+            targetScreen.classList.add('active');
+            this.currentScreen = screenName;
+
+            // 画面固有の初期化処理
+            this.initializeScreen(screenName);
+        }
+    }
+
+    // アクティブメニューの更新
+    updateActiveMenu(activeItem) {
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => item.classList.remove('active'));
+        activeItem.classList.add('active');
+    }
+
+    // 画面固有の初期化
+    initializeScreen(screenName) {
+        switch (screenName) {
+            case 'dashboard':
+                this.updateDashboard();
+                break;
+            case 'business-apps':
+                this.updateBusinessApps();
+                break;
+            case 'risk-analysis':
+                this.updateRiskAnalysis();
+                break;
+            case 'risk-branding':
+                this.updateRiskBranding();
+                break;
+            case 'insurance-portfolio':
+                this.updateInsurancePortfolio();
+                break;
+        }
+    }
+
+    // ダッシュボード更新
+    updateDashboard() {
+        // リアルタイムデータの更新をシミュレート
+        this.simulateDataUpdate();
+    }
+
+    // 業務アプリ更新
+    updateBusinessApps() {
+        // 本日の変更点を更新
+        this.updateTodayChanges();
+    }
+
+    // リスク分析更新
+    updateRiskAnalysis() {
+        // リスクメーターの更新
+        this.updateRiskMeters();
+
+        // 緊急アラートの表示
+        this.displayEmergencyAlerts();
+
+        // 社内リスクグラフの更新
+        this.updateInternalRiskCharts();
+
+        // 社外リスクグラフの更新
+        this.updateExternalRiskCharts();
+
+        // 総合リスクサマリーの更新
+        this.updateRiskSummary();
+    }
+
+    // 緊急アラート表示
+    displayEmergencyAlerts() {
+        const alertsContainer = document.querySelector('.emergency-alerts');
+        if (!alertsContainer || !this.emergencyAlerts) return;
+
+        this.emergencyAlerts.forEach(alert => {
+            const alertElement = alertsContainer.querySelector(`[data-alert-id="${alert.id}"]`);
+            if (alertElement) {
+                // 既存のアラートボタンにイベントリスナーを追加
+                const actionBtn = alertElement.querySelector('.alert-action');
+                if (actionBtn) {
+                    actionBtn.addEventListener('click', () => this.handleAlertAction(alert));
+                }
+            }
+        });
+    }
+
+    // アラートアクション処理
+    handleAlertAction(alert) {
+        switch (alert.level) {
+            case 'critical':
+                this.showCriticalAlertDialog(alert);
+                break;
+            case 'high':
+                this.showHighAlertDialog(alert);
+                break;
+            default:
+                this.showAlertDialog(alert);
+        }
+    }
+
+    // 社内リスクチャート更新
+    updateInternalRiskCharts() {
+        // 在庫推移棒グラフの更新
+        this.updateInventoryChart();
+
+        // 従業員リスク円グラフの更新
+        this.updateEmployeeRiskChart();
+
+        // システム脆弱性線グラフの更新
+        this.updateVulnerabilityChart();
+    }
+
+    // 在庫推移チャート更新
+    updateInventoryChart() {
+        const chartBars = document.querySelectorAll('#inventory-chart .bar');
+        if (!chartBars.length || !this.internalRiskData.inventory) return;
+
+        chartBars.forEach((bar, index) => {
+            const trendData = this.internalRiskData.inventory.trends[index];
+            if (trendData) {
+                // バーの高さとスタイルをアニメーション付きで更新
+                setTimeout(() => {
+                    bar.style.height = trendData.height;
+                    if (trendData.warning) {
+                        bar.classList.add('warning');
+                    }
+
+                    // ホバーイベントの追加
+                    bar.addEventListener('mouseenter', () => {
+                        this.showInventoryTooltip(trendData, bar);
+                    });
+                }, index * 100);
+            }
+        });
+    }
+
+    // 従業員リスクチャート更新
+    updateEmployeeRiskChart() {
+        const pieChart = document.getElementById('employee-risk-chart');
+        if (!pieChart || !this.internalRiskData.employees) return;
+
+        const employeeData = this.internalRiskData.employees;
+
+        // 円グラフのアニメーション
+        setTimeout(() => {
+            // 中央の合計人数を更新
+            const centerText = pieChart.querySelector('.total-employees');
+            if (centerText) {
+                centerText.textContent = `${employeeData.total}名`;
+            }
+        }, 500);
+    }
+
+    // システム脆弱性チャート更新
+    updateVulnerabilityChart() {
+        const vulnerabilityChart = document.getElementById('vulnerability-chart');
+        if (!vulnerabilityChart) return;
+
+        // 線グラフのアニメーション
+        const svgLine = vulnerabilityChart.querySelector('polyline');
+        if (svgLine) {
+            // 線の描画アニメーション
+            const pathLength = svgLine.getTotalLength();
+            svgLine.style.strokeDasharray = pathLength;
+            svgLine.style.strokeDashoffset = pathLength;
+
+            setTimeout(() => {
+                svgLine.style.transition = 'stroke-dashoffset 2s ease-in-out';
+                svgLine.style.strokeDashoffset = '0';
+            }, 300);
+        }
+    }
+
+    // 社外リスクチャート更新
+    updateExternalRiskCharts() {
+        // 地域別災害リスク更新
+        this.updateDisasterRiskMap();
+
+        // 取引先信用リスク更新
+        this.updateCreditRiskChart();
+
+        // 市場環境リスク更新
+        this.updateMarketRiskGauge();
+    }
+
+    // 災害リスクマップ更新
+    updateDisasterRiskMap() {
+        const riskRegions = document.querySelectorAll('.risk-region');
+        if (!riskRegions.length || !this.externalRiskData.disasters) return;
+
+        riskRegions.forEach((region, index) => {
+            const disasterData = this.externalRiskData.disasters[index];
+            if (disasterData) {
+                // リスク地域のクリックイベント
+                region.addEventListener('click', () => {
+                    this.showDisasterRiskDetails(disasterData);
+                });
+
+                // アニメーション効果
+                setTimeout(() => {
+                    region.style.transform = 'translateX(0)';
+                    region.style.opacity = '1';
+                }, index * 200);
+            }
+        });
+    }
+
+    // 信用リスクチャート更新
+    updateCreditRiskChart() {
+        const companyRisks = document.querySelectorAll('.company-risk');
+        if (!companyRisks.length || !this.externalRiskData.creditRisk) return;
+
+        companyRisks.forEach((company, index) => {
+            const creditData = this.externalRiskData.creditRisk[index];
+            if (creditData) {
+                const riskFill = company.querySelector('.risk-fill');
+                if (riskFill) {
+                    // リスクバーのアニメーション
+                    setTimeout(() => {
+                        riskFill.style.width = `${creditData.score}%`;
+                    }, index * 300);
+                }
+
+                // クリックイベント
+                company.addEventListener('click', () => {
+                    this.showCreditRiskDetails(creditData);
+                });
+            }
+        });
+    }
+
+    // 市場リスクゲージ更新
+    updateMarketRiskGauge() {
+        const gauge = document.querySelector('.gauge-needle');
+        if (!gauge || !this.externalRiskData.marketRisk) return;
+
+        const marketData = this.externalRiskData.marketRisk;
+
+        // ゲージ針のアニメーション
+        setTimeout(() => {
+            gauge.style.transform = `translate(-50%, -100%) rotate(${marketData.gauge}deg)`;
+        }, 500);
+    }
+
+    // 総合リスクサマリー更新
+    updateRiskSummary() {
+        if (!this.riskSummary) return;
+
+        // カウントアニメーション
+        this.animateCounters();
+
+        // サマリーカードのクリックイベント
+        this.setupSummaryCardEvents();
+    }
+
+    // カウンターアニメーション
+    animateCounters() {
+        const counters = [
+            { selector: '.summary-card.critical .count', target: this.riskSummary.critical },
+            { selector: '.summary-card.high .count', target: this.riskSummary.high },
+            { selector: '.summary-card.medium .count', target: this.riskSummary.medium },
+            { selector: '.summary-card.coverage .percentage', target: this.riskSummary.coverageRate, suffix: '%' }
+        ];
+
+        counters.forEach(counter => {
+            const element = document.querySelector(counter.selector);
+            if (element) {
+                this.animateNumber(element, 0, counter.target, counter.suffix || '件');
+            }
+        });
+    }
+
+    // 数値アニメーション
+    animateNumber(element, start, end, suffix) {
+        const duration = 1000;
+        const startTime = Date.now();
+
+        const updateNumber = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const current = Math.floor(start + (end - start) * progress);
+
+            element.textContent = current + suffix;
+
+            if (progress < 1) {
+                requestAnimationFrame(updateNumber);
+            }
+        };
+
+        updateNumber();
+    }
+
+    // サマリーカードイベント設定
+    setupSummaryCardEvents() {
+        const summaryCards = document.querySelectorAll('.summary-card');
+        summaryCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const cardType = card.classList[1]; // critical, high, medium, coverage
+                this.showSummaryDetails(cardType);
+            });
+        });
+    }
+
+    // リスクブランディング更新
+    updateRiskBranding() {
+        // ランキングの更新
+        this.updateRankings();
+    }
+
+    // 保険ポートフォリオ更新
+    updateInsurancePortfolio() {
+        // 保険契約一覧の更新
+        this.updateInsuranceTable();
+    }
+
+    // ログイン画面表示
+    showLoginScreen() {
+        console.log('showLoginScreen called'); // デバッグ用
+
+        const loginScreen = document.getElementById('login-screen');
+        const mainApp = document.getElementById('main-app');
+
+        console.log('初期化時 loginScreen:', loginScreen); // デバッグ用
+        console.log('初期化時 mainApp:', mainApp); // デバッグ用
+
+        if (loginScreen) {
+            loginScreen.classList.add('active');
+            console.log('login-screen activeクラスを追加'); // デバッグ用
+        }
+
+        if (mainApp) {
+            mainApp.classList.remove('active');
+            console.log('main-app activeクラスを削除'); // デバッグ用
+        }
+    }
+
+    // メインアプリ表示
+    showMainApp() {
+        console.log('showMainApp called'); // デバッグ用
+
+        const loginScreen = document.getElementById('login-screen');
+        const mainApp = document.getElementById('main-app');
+
+        console.log('loginScreen:', loginScreen); // デバッグ用
+        console.log('mainApp:', mainApp); // デバッグ用
+
+        if (loginScreen) {
+            loginScreen.classList.remove('active');
+            console.log('login-screen activeクラスを削除'); // デバッグ用
+            console.log('login-screen クラス一覧:', loginScreen.className); // デバッグ用
+        }
+
+        if (mainApp) {
+            mainApp.classList.add('active');
+            console.log('main-app activeクラスを追加'); // デバッグ用
+            console.log('main-app クラス一覧:', mainApp.className); // デバッグ用
+            console.log('main-app computedStyle visibility:', window.getComputedStyle(mainApp).visibility); // デバッグ用
+            console.log('main-app computedStyle opacity:', window.getComputedStyle(mainApp).opacity); // デバッグ用
+        }
+    }
+
+    // ユーザーインターフェース更新
+    updateUserInterface() {
+        if (this.currentUser) {
+            const userNameElement = document.querySelector('.user-name');
+            if (userNameElement) {
+                userNameElement.textContent = this.currentUser.name;
+            }
+        }
+    }
+
+    // データ更新シミュレーション
+    simulateDataUpdate() {
+        // 売上データの更新
+        const salesValue = document.querySelector('.dashboard-cards .card:first-child .value');
+        if (salesValue) {
+            const currentValue = parseInt(salesValue.textContent.replace(/[¥,]/g, ''));
+            const newValue = currentValue + Math.floor(Math.random() * 100000);
+            salesValue.textContent = `¥${newValue.toLocaleString()}`;
+        }
+
+        // 通知バッジの更新
+        this.updateNotificationBadge();
+    }
+
+    // 通知バッジ更新
+    updateNotificationBadge() {
+        const badge = document.querySelector('.notification-badge');
+        if (badge) {
+            const count = Math.floor(Math.random() * 5) + 1;
+            badge.textContent = count;
+        }
+    }
+
+    // 本日の変更点更新
+    updateTodayChanges() {
+        const timestamp = new Date().toLocaleTimeString('ja-JP', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        console.log(`${timestamp}: 業務アプリデータを更新しました`);
+    }
+
+    // リスクメーター更新
+    updateRiskMeters() {
+        const meters = document.querySelectorAll('.meter-value');
+        meters.forEach(meter => {
+            const randomRotation = Math.floor(Math.random() * 180);
+            meter.style.transform = `rotate(${randomRotation}deg)`;
+        });
+    }
+
+    // ランキング更新
+    updateRankings() {
+        console.log('ランキングデータを更新しました');
+    }
+
+    // 保険テーブル更新
+    updateInsuranceTable() {
+        // 保険契約の期限チェック
+        this.checkInsuranceExpiry();
+    }
+
+    // 保険期限チェック
+    checkInsuranceExpiry() {
+        const today = new Date();
+        const expiryThreshold = 30; // 30日前に警告
+
+        this.insuranceData.forEach(insurance => {
+            const expiryDate = new Date(insurance.endDate);
+            const daysUntilExpiry = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+
+            if (daysUntilExpiry <= expiryThreshold && daysUntilExpiry > 0) {
+                this.addNotification({
+                    type: 'warning',
+                    message: `${insurance.type}の更新期限が近づいています（${daysUntilExpiry}日後）`,
+                    icon: 'fas fa-exclamation-triangle'
+                });
+            }
+        });
+    }
+
+    // 通知追加
+    addNotification(notification) {
+        this.notifications.push({
+            ...notification,
+            id: Date.now(),
+            timestamp: new Date()
+        });
+
+        this.updateNotificationDisplay();
+    }
+
+    // 通知表示更新
+    updateNotificationDisplay() {
+        const notificationList = document.querySelector('.notification-list');
+        if (notificationList && this.notifications.length > 0) {
+            const latestNotification = this.notifications[this.notifications.length - 1];
+
+            const notificationElement = document.createElement('div');
+            notificationElement.className = 'notification-item';
+            notificationElement.innerHTML = `
+                <i class="${latestNotification.icon} ${latestNotification.type}"></i>
+                <span>${latestNotification.message}</span>
+            `;
+
+            notificationList.appendChild(notificationElement);
+        }
+    }
+
+    // 保険詳細表示
+    showInsuranceDetails(insuranceType) {
+        alert(`${insuranceType}の詳細情報を表示します。\n\n現在の補償内容を確認し、適切な見直し案をご提案いたします。`);
+    }
+
+    // 保険推奨表示
+    showInsuranceRecommendation(insuranceType) {
+        alert(`${insuranceType}のご提案\n\n貴社のリスク分析結果に基づき、${insuranceType}の導入をお勧めいたします。\n\n詳細な見積もりをご希望の場合は、担当者にお声がけください。`);
+    }
+
+    // 補償見直し表示
+    showCoverageReview(insuranceType) {
+        alert(`${insuranceType}の補償見直し\n\n現在の事業規模と比較して、補償額の調整が必要な可能性があります。\n\n無料診断をご希望の場合は、お気軽にお申し付けください。`);
+    }
+
+    // アクションダイアログ表示
+    showActionDialog(title, message) {
+        alert(`${title}\n\n${message}`);
+    }
+
+    // 推奨ダイアログ表示
+    showRecommendationDialog(title, message) {
+        alert(`${title}\n\n${message}\n\n担当者より詳細をご連絡いたします。`);
+    }
+
+    // 緊急アラートダイアログ表示
+    showCriticalAlertDialog(alert) {
+        const message = `【緊急対応が必要です】\n\n${alert.title}\n\n${alert.description}\n\n${alert.coverageText}\n\n即座に対策本部を設置し、以下の対応を実施してください：\n1. 現地状況の確認\n2. 在庫・設備の緊急移動\n3. 保険会社への連絡\n4. 代替拠点の確保`;
+
+        if (confirm(message + '\n\n対策本部を設置しますか？')) {
+            this.activateEmergencyResponse(alert);
+        }
+    }
+
+    // 高リスクアラートダイアログ表示
+    showHighAlertDialog(alert) {
+        const message = `【高リスク警告】\n\n${alert.title}\n\n${alert.description}\n\n${alert.coverageText}\n\n推奨アクション：\n1. 取引条件の見直し\n2. 信用保険の検討\n3. 定期的な信用調査\n4. 取引分散の検討`;
+
+        alert(message);
+    }
+
+    // アラートダイアログ表示
+    showAlertDialog(alert) {
+        alert(`${alert.title}\n\n${alert.description}\n\n${alert.coverageText}`);
+    }
+
+    // 災害リスク詳細表示
+    showDisasterRiskDetails(disasterData) {
+        const message = `【災害リスク詳細】\n\n拠点: ${disasterData.location}\nリスク種類: ${disasterData.type}\n発生確率: ${disasterData.probability}%\n\n推奨対策：\n1. 定期的な防災訓練の実施\n2. 災害対応マニュアルの整備\n3. 保険補償内容の確認\n4. 代替拠点の準備`;
+
+        alert(message);
+    }
+
+    // 信用リスク詳細表示
+    showCreditRiskDetails(creditData) {
+        const riskLevel = creditData.level === 'high' ? '高リスク' :
+                         creditData.level === 'medium' ? '中リスク' : '低リスク';
+
+        const message = `【取引先信用リスク詳細】\n\n企業名: ${creditData.company}\nリスクスコア: ${creditData.score}\nリスクレベル: ${riskLevel}\n\n推奨アクション：\n1. 定期的な信用調査\n2. 取引条件の見直し\n3. 債権保全策の検討\n4. 取引信用保険の活用`;
+
+        alert(message);
+    }
+
+    // 在庫ツールチップ表示
+    showInventoryTooltip(trendData, barElement) {
+        // 簡易ツールチップ表示（実際のプロジェクトではより洗練されたツールチップライブラリを使用）
+        const existingTooltip = document.querySelector('.inventory-tooltip');
+        if (existingTooltip) {
+            existingTooltip.remove();
+        }
+
+        const tooltip = document.createElement('div');
+        tooltip.className = 'inventory-tooltip';
+        tooltip.innerHTML = `
+            <div style="background: #2c3e50; color: white; padding: 8px 12px; border-radius: 4px; font-size: 12px; position: absolute; z-index: 1000;">
+                ${trendData.month}: ${trendData.value}M円
+                ${trendData.warning ? '<br><span style="color: #f39c12;">⚠ 在庫過多警告</span>' : ''}
+            </div>
+        `;
+
+        const rect = barElement.getBoundingClientRect();
+        tooltip.style.position = 'absolute';
+        tooltip.style.left = rect.left + 'px';
+        tooltip.style.top = (rect.top - 60) + 'px';
+
+        document.body.appendChild(tooltip);
+
+        // 3秒後に自動削除
+        setTimeout(() => {
+            if (tooltip.parentNode) {
+                tooltip.parentNode.removeChild(tooltip);
+            }
+        }, 3000);
+    }
+
+    // サマリー詳細表示
+    showSummaryDetails(cardType) {
+        let message = '';
+
+        switch (cardType) {
+            case 'critical':
+                message = '【緊急対応必要案件】\n\n1. 洪水リスク警告（埼玉倉庫）\n2. 取引先信用リスク（ABC商事）\n\n即座に対応が必要です。';
+                break;
+            case 'high':
+                message = '【高リスク案件】\n\n1. システム脆弱性\n2. 在庫過多リスク\n3. 従業員安全リスク\n4. 為替変動リスク\n5. 競合他社参入リスク\n\n計画的な対応を検討してください。';
+                break;
+            case 'medium':
+                message = '【中リスク案件】\n\n8件の中リスク案件があります。\n定期的な監視と予防的対策を継続してください。';
+                break;
+            case 'coverage':
+                message = `【保険カバー率詳細】\n\n現在のカバー率: ${this.riskSummary.coverageRate}%\n\n未カバー項目：\n- サイバーセキュリティ\n- 洪水災害（一部地域）\n- 市場リスク\n\n保険見直しを推奨します。`;
+                break;
+        }
+
+        alert(message);
+    }
+
+    // 緊急対応システム起動
+    activateEmergencyResponse(alert) {
+        // 緊急対応システムの模擬実装
+        this.addNotification({
+            type: 'critical',
+            message: `緊急対応システムが起動されました - ${alert.title}`,
+            icon: 'fas fa-exclamation-circle'
+        });
+
+        // 通知音やアラートの実装（実際のシステムでは音声やメール通知）
+        console.log('🚨 緊急対応システム起動:', alert.title);
+
+        // 関係者への通知（模擬）
+        setTimeout(() => {
+            this.addNotification({
+                type: 'info',
+                message: '関係部署に緊急対応の指示を送信しました',
+                icon: 'fas fa-paper-plane'
+            });
+        }, 2000);
+    }
+
+    // ダミーデータ読み込み
+    loadDummyData() {
+        // 保険契約データ
+        this.insuranceData = [
+            {
+                id: 1,
+                type: '火災保険',
+                product: '企業総合保険',
+                company: '○○損保',
+                startDate: '2023-03-15',
+                endDate: '2024-03-15',
+                coverage: '建物・設備 5億円',
+                status: 'warning'
+            },
+            {
+                id: 2,
+                type: '賠償責任保険',
+                product: 'PL保険',
+                company: '△△海上',
+                startDate: '2023-04-01',
+                endDate: '2024-03-31',
+                coverage: '対人・対物 1億円',
+                status: 'ok'
+            },
+            {
+                id: 3,
+                type: '労災保険',
+                product: '労災上乗せ保険',
+                company: '□□生命',
+                startDate: '2023-04-01',
+                endDate: '2024-03-31',
+                coverage: '死亡・後遺障害 5000万円',
+                status: 'ok'
+            }
+        ];
+
+        // リスクデータ
+        this.riskData = {
+            totalScore: 75,
+            categories: {
+                fire: { level: 20, label: '低' },
+                liability: { level: 60, label: '中' },
+                management: { level: 40, label: '中' }
+            },
+            coverage: 78
+        };
+
+        // 業務データ
+        this.businessData = {
+            sales: {
+                current: 15240000,
+                change: 12.3
+            },
+            inventory: {
+                items: 1245,
+                change: -5.2
+            },
+            customers: {
+                active: 342,
+                change: 8.7
+            },
+            insurance: {
+                contracts: 12,
+                status: 'ok'
+            }
+        };
+
+        // 初期通知
+        this.notifications = [
+            {
+                id: 1,
+                type: 'warning',
+                message: '火災保険の更新期限が近づいています（2024年3月15日）',
+                icon: 'fas fa-exclamation-triangle',
+                timestamp: new Date()
+            },
+            {
+                id: 2,
+                type: 'info',
+                message: '新しいリスク評価レポートが利用可能です',
+                icon: 'fas fa-info-circle',
+                timestamp: new Date()
+            },
+            {
+                id: 3,
+                type: 'success',
+                message: 'Risk Lance認定企業ランキングでAランクを達成しました',
+                icon: 'fas fa-trophy',
+                timestamp: new Date()
+            }
+        ];
+
+        // 緊急アラートデータ
+        this.emergencyAlerts = [
+            {
+                id: 1,
+                level: 'critical',
+                title: '緊急: 洪水リスク警告',
+                description: '倉庫所在地（埼玉県越谷市）で48時間以内に洪水発生の可能性（65%）',
+                coverage: 'uncovered',
+                coverageText: '保険カバー: なし',
+                action: '対策を確認',
+                icon: 'fas fa-exclamation-triangle'
+            },
+            {
+                id: 2,
+                level: 'high',
+                title: '取引先信用リスク',
+                description: '主要取引先の関連会社（ABC商事関連2社）が債務超過状態',
+                coverage: 'partial',
+                coverageText: '保険カバー: 部分的',
+                action: '詳細確認',
+                icon: 'fas fa-building'
+            }
+        ];
+
+        // 社内リスクデータ
+        this.internalRiskData = {
+            inventory: {
+                trends: [
+                    { month: '4月', value: 12, height: '60%' },
+                    { month: '5月', value: 15, height: '75%' },
+                    { month: '6月', value: 17, height: '85%' },
+                    { month: '7月', value: 18, height: '90%' },
+                    { month: '8月', value: 19, height: '95%' },
+                    { month: '9月', value: 20, height: '100%', warning: true }
+                ],
+                riskLevel: 'medium',
+                coverage: { status: 'covered', text: '火災保険: 80%カバー' }
+            },
+            employees: {
+                safe: 40,
+                caution: 35,
+                highRisk: 25,
+                total: 245,
+                riskLevel: 'high',
+                coverage: { status: 'covered', text: '労災保険: 100%カバー' }
+            },
+            cybersecurity: {
+                vulnerabilityTrend: 'increasing',
+                riskLevel: 'high',
+                coverage: { status: 'uncovered', text: 'サイバー保険: 未加入' }
+            }
+        };
+
+        // 社外リスクデータ
+        this.externalRiskData = {
+            disasters: [
+                {
+                    location: '埼玉倉庫',
+                    type: '洪水リスク',
+                    probability: 65,
+                    level: 'high-risk',
+                    icon: 'fas fa-water'
+                },
+                {
+                    location: '東京本社',
+                    type: '地震リスク',
+                    probability: 35,
+                    level: 'medium-risk',
+                    icon: 'fas fa-home'
+                },
+                {
+                    location: '大阪支店',
+                    type: '総合リスク',
+                    probability: 15,
+                    level: 'low-risk',
+                    icon: 'fas fa-building'
+                }
+            ],
+            creditRisk: [
+                {
+                    company: 'ABC商事',
+                    score: 85,
+                    level: 'high'
+                },
+                {
+                    company: 'XYZ工業',
+                    score: 45,
+                    level: 'medium'
+                },
+                {
+                    company: 'DEF物流',
+                    score: 20,
+                    level: 'low'
+                }
+            ],
+            marketRisk: {
+                gauge: 45, // 度数（0-180）
+                factors: [
+                    { name: '原材料価格', trend: 'up', value: '+15%' },
+                    { name: '為替変動', trend: 'down', value: '-8%' },
+                    { name: '競合他社', trend: 'up', value: '+3社' }
+                ],
+                riskLevel: 'medium',
+                coverage: { status: 'uncovered', text: '市場リスク: 保険適用外' }
+            }
+        };
+
+        // 総合リスクサマリー
+        this.riskSummary = {
+            critical: 2,
+            high: 5,
+            medium: 8,
+            coverageRate: 68
+        };
+    }
+}
+
+// アプリケーション初期化
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing RiskLanceApp'); // デバッグ用
+    window.riskLanceApp = new RiskLanceApp();
+});
+
+// 追加のユーティリティ関数
+
+// 数値フォーマット関数
+function formatNumber(num) {
+    return num.toLocaleString('ja-JP');
+}
+
+// 日付フォーマット関数
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ja-JP', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    });
+}
+
+// パーセンテージ計算関数
+function calculatePercentage(value, total) {
+    return Math.round((value / total) * 100);
+}
+
+// リスクレベル判定関数
+function getRiskLevel(score) {
+    if (score <= 30) return { level: 'low', label: '低', color: '#27ae60' };
+    if (score <= 70) return { level: 'medium', label: '中', color: '#f39c12' };
+    return { level: 'high', label: '高', color: '#e74c3c' };
+}
+
+// データ更新シミュレーション（定期実行）
+setInterval(() => {
+    if (window.riskLanceApp && window.riskLanceApp.currentUser) {
+        // 5分ごとにダッシュボードデータを更新
+        if (window.riskLanceApp.currentScreen === 'dashboard') {
+            window.riskLanceApp.simulateDataUpdate();
+        }
+    }
+}, 300000); // 5分 = 300,000ミリ秒
+
+// ページ読み込み完了時の処理
+window.addEventListener('load', () => {
+    console.log('Risk Lance アプリケーションが開始されました');
+
+    // プログレスバーアニメーション
+    const progressBars = document.querySelectorAll('.progress');
+    progressBars.forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => {
+            bar.style.width = width;
+        }, 500);
+    });
+
+    // カバレッジサークルアニメーション
+    const coverageBars = document.querySelectorAll('.covered');
+    coverageBars.forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => {
+            bar.style.width = width;
+        }, 1000);
+    });
+});
+
+// エラーハンドリング
+window.addEventListener('error', (e) => {
+    console.error('アプリケーションエラー:', e.error);
+});
+
+// レスポンシブ対応
+window.addEventListener('resize', () => {
+    // ウィンドウサイズ変更時の処理
+    if (window.innerWidth <= 768) {
+        // モバイル表示時の処理
+        document.body.classList.add('mobile-view');
+    } else {
+        document.body.classList.remove('mobile-view');
+    }
+});

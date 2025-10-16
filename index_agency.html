@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Lance 代理店管理システム</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/agency.css">
+</head>
+<body>
+    <!-- ログイン画面 -->
+    <div id="login-screen" class="screen active">
+        <div class="login-container">
+            <div class="login-form">
+                <div class="logo">
+                    <i class="fas fa-handshake"></i>
+                    <h1>Risk Lance 代理店</h1>
+                    <p>代理店管理システム</p>
+                </div>
+                <form id="login-form">
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" placeholder="代理店ID" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="パスワード" required>
+                    </div>
+                    <button type="submit" class="login-btn">ログイン</button>
+                </form>
+                <div class="login-links">
+                    <a href="#" class="forgot-password">パスワードを忘れた方</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- メインアプリケーション -->
+    <div id="main-app" class="screen">
+        <!-- ヘッダー -->
+        <header class="header">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="顧客名・証券番号で検索...">
+            </div>
+            <div class="header-right">
+                <div class="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">5</span>
+                </div>
+                <div class="user-menu">
+                    <span class="user-name">山田代理店</span>
+                    <div class="user-dropdown">
+                        <i class="fas fa-cog"></i>
+                        <i class="fas fa-question-circle"></i>
+                        <i class="fas fa-sign-out-alt" id="logout-btn"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- サイドバー -->
+        <nav class="sidebar">
+            <div class="sidebar-menu">
+                <div class="menu-item active" data-screen="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>ダッシュボード</span>
+                </div>
+                <div class="menu-item" data-screen="customer-management">
+                    <i class="fas fa-users"></i>
+                    <span>顧客管理</span>
+                </div>
+                <div class="menu-item" data-screen="policy-management">
+                    <i class="fas fa-file-contract"></i>
+                    <span>保険証券管理</span>
+                </div>
+                <div class="menu-item" data-screen="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span>通知・アラート</span>
+                </div>
+                <div class="menu-item" data-screen="reports">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>レポート</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- メインコンテンツ -->
+        <main class="main-content">
+            <!-- ダッシュボード -->
+            <div id="dashboard" class="content-screen active">
+                <h2>代理店ダッシュボード</h2>
+
+                <!-- サマリー統計 -->
+                <div class="summary-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>総顧客数</h3>
+                            <span class="stat-number">247</span>
+                            <span class="stat-change positive">+12 今月</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>管理証券数</h3>
+                            <span class="stat-number">589</span>
+                            <span class="stat-change positive">+23 今月</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>要対応案件</h3>
+                            <span class="stat-number">8</span>
+                            <span class="stat-change urgent">要確認</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-yen-sign"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>今月の手数料</h3>
+                            <span class="stat-number">¥2,340,000</span>
+                            <span class="stat-change positive">+8.5%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 最近のアクティビティ -->
+                <div class="recent-activities-section">
+                    <h3>最近のアクティビティ</h3>
+                    <div class="activity-list">
+                        <div class="activity-item urgent">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <div class="activity-content">
+                                <span class="activity-text">株式会社ABC商事から保険見直しの依頼</span>
+                                <span class="activity-time">2時間前</span>
+                            </div>
+                            <button class="activity-action">対応</button>
+                        </div>
+                        <div class="activity-item warning">
+                            <i class="fas fa-calendar-alt"></i>
+                            <div class="activity-content">
+                                <span class="activity-text">XYZ工業の火災保険が来月満期</span>
+                                <span class="activity-time">1日前</span>
+                            </div>
+                            <button class="activity-action">確認</button>
+                        </div>
+                        <div class="activity-item info">
+                            <i class="fas fa-handshake"></i>
+                            <div class="activity-content">
+                                <span class="activity-text">新規顧客：テック企業DEFを登録</span>
+                                <span class="activity-time">3日前</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 顧客管理 -->
+            <div id="customer-management" class="content-screen">
+                <div class="screen-header">
+                    <h2>顧客管理</h2>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="add-customer-btn">
+                            <i class="fas fa-plus"></i>
+                            新規顧客登録
+                        </button>
+                        <button class="btn btn-secondary" id="export-customers-btn">
+                            <i class="fas fa-download"></i>
+                            エクスポート
+                        </button>
+                    </div>
+                </div>
+
+                <!-- フィルター・検索 -->
+                <div class="filters-section">
+                    <div class="filter-group">
+                        <label>ステータス</label>
+                        <select id="customer-status-filter">
+                            <option value="all">すべて</option>
+                            <option value="active">アクティブ</option>
+                            <option value="review-pending">見直し要求あり</option>
+                            <option value="expired-policies">満期間近</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>業種</label>
+                        <select id="industry-filter">
+                            <option value="all">すべて</option>
+                            <option value="manufacturing">製造業</option>
+                            <option value="retail">小売業</option>
+                            <option value="service">サービス業</option>
+                            <option value="construction">建設業</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>保険種目</label>
+                        <select id="insurance-type-filter">
+                            <option value="all">すべて</option>
+                            <option value="fire">火災保険</option>
+                            <option value="liability">賠償責任保険</option>
+                            <option value="auto">自動車保険</option>
+                            <option value="workers-comp">労災保険</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 顧客リスト -->
+                <div class="customer-table-container">
+                    <table class="customer-table">
+                        <thead>
+                            <tr>
+                                <th>顧客名</th>
+                                <th>業種</th>
+                                <th>保有保険</th>
+                                <th>リスク状況</th>
+                                <th>最終更新</th>
+                                <th>ステータス</th>
+                                <th>アクション</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customer-table-body">
+                            <!-- JavaScript で動的に生成 -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ページネーション -->
+                <div class="pagination">
+                    <button class="pagination-btn" id="prev-page">前へ</button>
+                    <span class="pagination-info">1 / 10 ページ</span>
+                    <button class="pagination-btn" id="next-page">次へ</button>
+                </div>
+            </div>
+
+            <!-- 保険証券管理 -->
+            <div id="policy-management" class="content-screen">
+                <div class="screen-header">
+                    <h2>保険証券管理</h2>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="add-policy-btn">
+                            <i class="fas fa-plus"></i>
+                            新規証券登録
+                        </button>
+                        <button class="btn btn-secondary" id="export-policies-btn">
+                            <i class="fas fa-download"></i>
+                            エクスポート
+                        </button>
+                    </div>
+                </div>
+
+                <!-- フィルター・検索 -->
+                <div class="filters-section">
+                    <div class="filter-group">
+                        <label>保険種目</label>
+                        <select id="policy-type-filter">
+                            <option value="all">すべて</option>
+                            <option value="fire">火災保険</option>
+                            <option value="liability">賠償責任保険</option>
+                            <option value="auto">自動車保険</option>
+                            <option value="workers-comp">労災保険</option>
+                            <option value="cyber">サイバー保険</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>保険会社</label>
+                        <select id="insurer-filter">
+                            <option value="all">すべて</option>
+                            <option value="tokio-marine">東京海上</option>
+                            <option value="sompo">損保ジャパン</option>
+                            <option value="ms-ad">三井住友海上</option>
+                            <option value="aioi">あいおいニッセイ</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>ステータス</label>
+                        <select id="policy-status-filter">
+                            <option value="all">すべて</option>
+                            <option value="active">有効</option>
+                            <option value="expiring-soon">満期間近</option>
+                            <option value="expired">満期</option>
+                            <option value="cancelled">解約</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>満期日</label>
+                        <input type="date" id="expiry-date-filter">
+                    </div>
+                </div>
+
+                <!-- 証券リスト -->
+                <div class="policy-table-container">
+                    <table class="policy-table">
+                        <thead>
+                            <tr>
+                                <th>証券番号</th>
+                                <th>顧客名</th>
+                                <th>保険種目</th>
+                                <th>保険会社</th>
+                                <th>保険始期</th>
+                                <th>保険終期</th>
+                                <th>保険金額</th>
+                                <th>年間保険料</th>
+                                <th>ステータス</th>
+                                <th>アクション</th>
+                            </tr>
+                        </thead>
+                        <tbody id="policy-table-body">
+                            <!-- JavaScript で動的に生成 -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ページネーション -->
+                <div class="pagination">
+                    <button class="pagination-btn" id="policy-prev-page">前へ</button>
+                    <span class="pagination-info">1 / 15 ページ</span>
+                    <button class="pagination-btn" id="policy-next-page">次へ</button>
+                </div>
+            </div>
+
+            <!-- 通知・アラート -->
+            <div id="notifications" class="content-screen">
+                <h2>通知・アラート</h2>
+
+                <div class="notification-categories">
+                    <button class="category-btn active" data-category="all">すべて</button>
+                    <button class="category-btn" data-category="urgent">緊急</button>
+                    <button class="category-btn" data-category="expiry">満期通知</button>
+                    <button class="category-btn" data-category="review">見直し依頼</button>
+                    <button class="category-btn" data-category="risk">リスク警告</button>
+                </div>
+
+                <div class="notifications-list">
+                    <!-- JavaScript で動的に生成 -->
+                </div>
+            </div>
+
+            <!-- レポート -->
+            <div id="reports" class="content-screen">
+                <h2>レポート</h2>
+
+                <div class="report-grid">
+                    <div class="report-card">
+                        <h3>顧客別売上レポート</h3>
+                        <p>顧客別の手数料収入と契約状況</p>
+                        <button class="btn btn-primary">生成</button>
+                    </div>
+                    <div class="report-card">
+                        <h3>満期管理レポート</h3>
+                        <p>今後3か月の満期予定証券一覧</p>
+                        <button class="btn btn-primary">生成</button>
+                    </div>
+                    <div class="report-card">
+                        <h3>リスク分析レポート</h3>
+                        <p>顧客のリスク状況集計</p>
+                        <button class="btn btn-primary">生成</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 顧客詳細モーダル -->
+    <div id="customer-detail-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>顧客詳細</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body" id="customer-detail-content">
+                <!-- JavaScript で動的に生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 証券詳細モーダル -->
+    <div id="policy-detail-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>証券詳細</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body" id="policy-detail-content">
+                <!-- JavaScript で動的に生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript ファイル読み込み -->
+    <script src="js/agency-data.js"></script>
+    <script src="js/agency-app.js"></script>
+</body>
+</html>

@@ -1,0 +1,618 @@
+/* Risk Lance - リーグシステム・ブランディングスタイル */
+
+/* ===== リスクレポート発行 ===== */
+.report-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-radius: var(--border-radius-lg);
+    color: white;
+}
+
+.report-generate-btn {
+    background: rgba(255, 145, 0, 0.973);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 12px 24px;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.report-generate-btn:hover {
+    background: rgba(255, 145, 0, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.report-options select {
+    padding: 10px 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+}
+
+/* ===== 企業リーグステータス ===== */
+.enterprise-league-section {
+    margin-bottom: 2rem;
+}
+
+.league-status-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}
+
+.current-league {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.league-emblem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    position: relative;
+}
+
+.league-emblem.bronze { background: linear-gradient(135deg, #CD7F32, #8B4513); }
+.league-emblem.silver { background: linear-gradient(135deg, #C0C0C0, #808080); }
+.league-emblem.gold { background: linear-gradient(135deg, #FFD700, #FFA500); }
+.league-emblem.platinum { background: linear-gradient(135deg, #E5E4E2, #71797E); }
+.league-emblem.diamond { background: linear-gradient(135deg, #B9F2FF, #4169E1); }
+.league-emblem.master { background: linear-gradient(135deg, #800080, #4B0082); }
+.league-emblem.challenger { background: linear-gradient(135deg, #FF6347, #DC143C); }
+
+.league-emblem i {
+    font-size: 40px;
+    margin-bottom: 0.5rem;
+}
+
+.league-name {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.league-info h4 {
+    font-size: 24px;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.league-title {
+    font-size: 18px;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+}
+
+.league-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.current-points {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.progress-bar {
+    width: 300px;
+    height: 8px;
+    background: var(--border-color);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    transition: width 0.3s ease;
+}
+
+.next-tier {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+/* ===== リスク体制評価 ===== */
+.risk-assessment-breakdown {
+    background: var(--bg-accent);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+}
+
+.assessment-categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.category-score {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.category {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.level-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.level {
+    background: var(--primary-color);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.stars {
+    color: #FFD700;
+    font-size: 14px;
+}
+
+.overall-assessment {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+/* ===== リーグランキングと参加企業 ===== */
+.league-rankings-section {
+    margin-bottom: 2rem;
+}
+
+.rankings-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.league-rankings, .recent-participants {
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}
+
+.ranking-table, .participants-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.rank-item, .participant-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--bg-accent);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.rank-item:hover, .participant-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.rank-item.current, .participant-item.new {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    border-color: #2563eb;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.rank-item.top {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #1f2937;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.rank {
+    font-weight: 600;
+    font-size: 16px;
+    min-width: 40px;
+    color: inherit;
+}
+
+.company, .company-name {
+    flex: 1;
+    font-weight: 500;
+    color: inherit;
+}
+
+.score {
+    font-weight: 600;
+    color: #059669;
+}
+
+.rank-item.current .score,
+.rank-item.top .score {
+    color: white;
+}
+
+.participant-item.new .score {
+    color: white;
+}
+
+/* ===== リーグティア ===== */
+.league-tier {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+}
+
+.league-tier.bronze { background: linear-gradient(135deg, #CD7F32, #8B4513); }
+.league-tier.silver { background: linear-gradient(135deg, #C0C0C0, #808080); }
+.league-tier.gold { background: linear-gradient(135deg, #FFD700, #FFA500); }
+.league-tier.platinum { background: linear-gradient(135deg, #E5E4E2, #71797E); }
+.league-tier.diamond { background: linear-gradient(135deg, #B9F2FF, #4169E1); }
+.league-tier.master { background: linear-gradient(135deg, #800080, #4B0082); }
+.league-tier.challenger { background: linear-gradient(135deg, #FF6347, #DC143C); }
+
+/* ===== 参加企業リスト ===== */
+.participant-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+}
+
+.join-date {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.participant-item.new .join-date {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status.new-badge {
+    background: #28a745;
+    color: white;
+}
+
+.status.promoted {
+    background: #007bff;
+    color: white;
+}
+
+.status.stable {
+    background: #6c757d;
+    color: white;
+}
+
+.status.rising {
+    background: #ffc107;
+    color: #212529;
+}
+
+/* ===== ギルドシステム ===== */
+.guild-system-section {
+    margin-top: 2rem;
+}
+
+.guild-overview {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+}
+
+.guild-info-card {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}
+
+.guild-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.guild-emblem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-radius: 50%;
+    color: white;
+    font-size: 32px;
+}
+
+.guild-details h4 {
+    font-size: 24px;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.guild-league {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.guild-league span {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--secondary-color);
+}
+
+.guild-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.guild-stats span {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+/* ===== ギルドメンバー ===== */
+.guild-members h5 {
+    font-size: 18px;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.members-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.member-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--bg-accent);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+.member-item.leader {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+    border-color: #8b5cf6;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.member-name {
+    flex: 1;
+    font-weight: 500;
+    color: inherit;
+}
+
+.member-level {
+    background: #1d4ed8;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.member-item.leader .member-level {
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.member-lp {
+    font-weight: 600;
+    color: #059669;
+}
+
+.member-item.leader .member-lp {
+    color: white;
+}
+
+.role {
+    background: #28a745;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* ===== ギルドランキング ===== */
+.guild-rankings {
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}
+
+.guild-rankings h4 {
+    font-size: 20px;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.guild-ranking-table {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.guild-rank-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: var(--bg-accent);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    font-size: 14px;
+}
+
+.guild-rank-item.current {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border-color: #10b981;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.guild-rank-item.top {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #1f2937;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.guild-name {
+    flex: 1;
+    font-weight: 500;
+    color: inherit;
+}
+
+.guild-score {
+    font-weight: 600;
+    color: #1d4ed8;
+}
+
+.guild-rank-item.current .guild-score {
+    color: white;
+}
+
+.guild-rank-item.top .guild-score {
+    color: white;
+}
+
+.member-count {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.guild-rank-item.current .member-count {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.guild-rank-item.top .member-count {
+    color: rgba(31, 41, 55, 0.8);
+}
+
+/* ===== レスポンシブ対応 ===== */
+@media (max-width: 1024px) {
+    .rankings-container,
+    .guild-overview {
+        grid-template-columns: 1fr;
+    }
+
+    .current-league {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .league-emblem {
+        width: 100px;
+        height: 100px;
+    }
+
+    .progress-bar {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .assessment-categories {
+        grid-template-columns: 1fr;
+    }
+
+    .category-score {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+
+    .report-actions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .league-status-card {
+        padding: 1rem;
+    }
+
+    .guild-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .member-item {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+}
