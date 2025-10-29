@@ -12,7 +12,7 @@ class InsuranceManager {
                 contractDate: '2023年3月15日',
                 startDate: '2023年3月15日',
                 endDate: '2024年3月15日',
-                status: '更新要',
+                status: '見直し要',
                 premium: '¥1,250,000',
                 coverage: {
                     building: '建物: 5億円',
@@ -20,6 +20,7 @@ class InsuranceManager {
                     inventory: '商品・製品: 5,000万円',
                     businessInterruption: '営業損失: 3,000万円/月'
                 },
+                inventoryCoverageAmount: 50000000, // 在庫補償金額（5,000万円）
                 deductible: '1事故につき10万円',
                 specialConditions: [
                     '地震保険付帯（建物評価額の50%）',
@@ -93,6 +94,39 @@ class InsuranceManager {
         };
     }
 
+    // 在庫金額チェック（3ヶ月以上8,000万円超過しているか）
+    checkInventoryValue() {
+        const inventoryData = window.dataManager.getInventoryData();
+        const monthlyHistory = inventoryData.monthlyValueHistory;
+
+        if (!monthlyHistory || monthlyHistory.length < 3) {
+            return null;
+        }
+
+        // 最新3ヶ月分を取得
+        const recentMonths = monthlyHistory.slice(-3);
+
+        // 全ての月で8,000万円以上かチェック
+        const threshold = 80000000; // 8,000万円
+        const allMonthsExceedThreshold = recentMonths.every(month => month.value >= threshold);
+
+        if (allMonthsExceedThreshold) {
+            const policy = this.policyData['1'];
+            const coverageAmount = policy.inventoryCoverageAmount;
+            const currentValue = recentMonths[recentMonths.length - 1].value;
+
+            return {
+                hasAlert: true,
+                currentValue: currentValue,
+                coverageAmount: coverageAmount,
+                shortage: currentValue - coverageAmount,
+                months: recentMonths
+            };
+        }
+
+        return null;
+    }
+
     // 保険詳細モーダル表示
     showPolicyDetail(policyId) {
         const policy = this.policyData[policyId];
@@ -102,8 +136,14 @@ class InsuranceManager {
             return;
         }
 
+        // 在庫金額チェック（火災保険の場合）
+        let inventoryAlert = null;
+        if (policyId === '1') {
+            inventoryAlert = this.checkInventoryValue();
+        }
+
         // モーダルHTML生成
-        const modalHtml = this.generatePolicyDetailModal(policy);
+        const modalHtml = this.generatePolicyDetailModal(policy, inventoryAlert);
 
         // 既存のモーダルを削除
         const existingModal = document.getElementById('policy-detail-modal');
@@ -123,7 +163,7 @@ class InsuranceManager {
     }
 
     // モーダルHTML生成
-    generatePolicyDetailModal(policy) {
+    generatePolicyDetailModal(policy, inventoryAlert) {
         const coverageHtml = Object.entries(policy.coverage)
             .map(([key, value]) => `<li>${value}</li>`)
             .join('');
@@ -134,6 +174,43 @@ class InsuranceManager {
 
         const statusClass = policy.status === '正常' ? 'status-ok' : 'status-warning';
         const riskClass = policy.riskScore > 70 ? 'high' : policy.riskScore > 40 ? 'medium' : 'low';
+
+        // 在庫金額アラートHTML生成
+        let inventoryAlertHtml = '';
+        if (inventoryAlert) {
+            const formatCurrency = (value) => `¥${(value / 10000).toLocaleString()}万円`;
+            inventoryAlertHtml = `
+                <div class="alert-item critical inventory-alert">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div class="alert-content">
+                        <h4>【重要】商品・製品の補償額不足</h4>
+                        <p>倉庫在庫の合計金額が過去3ヶ月以上${formatCurrency(80000000)}を超えています。</p>
+                        <div class="alert-details">
+                            <div class="detail-row">
+                                <span class="detail-label">現在の在庫金額:</span>
+                                <span class="detail-value highlight">${formatCurrency(inventoryAlert.currentValue)}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">現在の補償金額:</span>
+                                <span class="detail-value">${formatCurrency(inventoryAlert.coverageAmount)}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">不足額:</span>
+                                <span class="detail-value warning">${formatCurrency(inventoryAlert.shortage)}</span>
+                            </div>
+                        </div>
+                        <p class="alert-recommendation">
+                            <i class="fas fa-lightbulb"></i>
+                            商品・製品の保険金額を増額することをお勧めします。
+                        </p>
+                        <button class="btn btn-primary inventory-risk-btn" id="view-inventory-risk-btn">
+                            <i class="fas fa-chart-line"></i>
+                            在庫リスクを確認
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
 
         return `
             <div id="policy-detail-modal" class="modal">
@@ -146,6 +223,7 @@ class InsuranceManager {
                         </button>
                     </div>
                     <div class="modal-body">
+                        ${inventoryAlertHtml}
                         <div class="policy-detail-grid">
                             <!-- 基本情報 -->
                             <div class="detail-section">
@@ -269,6 +347,49 @@ class InsuranceManager {
         renewBtn.addEventListener('click', () => {
             alert('更新手続き機能は現在開発中です。');
         });
+
+        // 在庫リスク確認ボタン
+        const inventoryRiskBtn = modal.querySelector('#view-inventory-risk-btn');
+        if (inventoryRiskBtn) {
+            inventoryRiskBtn.addEventListener('click', () => {
+                closeModal();
+                // リスクダッシュボードに遷移
+                this.navigateToRiskDashboard();
+            });
+        }
+    }
+
+    // リスクダッシュボードに遷移
+    navigateToRiskDashboard() {
+        // サイドバーのリスクダッシュボードメニューをアクティブに
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.classList.remove('active');
+            if (item.dataset.screen === 'risk-analysis') {
+                item.classList.add('active');
+            }
+        });
+
+        // コンテンツ画面を切り替え
+        const contentScreens = document.querySelectorAll('.content-screen');
+        contentScreens.forEach(screen => {
+            screen.classList.remove('active');
+        });
+        document.getElementById('risk-analysis').classList.add('active');
+
+        // 在庫水準推移のセクションまでスクロール
+        setTimeout(() => {
+            const inventoryChart = document.getElementById('inventory-chart');
+            if (inventoryChart) {
+                inventoryChart.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // ハイライト効果
+                inventoryChart.style.outline = '3px solid var(--danger-color)';
+                inventoryChart.style.outlineOffset = '8px';
+                setTimeout(() => {
+                    inventoryChart.style.outline = 'none';
+                }, 2000);
+            }
+        }, 100);
     }
 }
 

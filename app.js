@@ -228,7 +228,7 @@ class RiskLanceApp {
 
     // リスク分析更新
     updateRiskAnalysis() {
-        // リスク分析機能の初期化
+        // リスクダッシュボード機能の初期化
         window.riskAnalysisManager.initializeRiskAnalysis();
     }
 

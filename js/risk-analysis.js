@@ -1,13 +1,17 @@
-// Risk Lance - リスク分析機能管理
+// Risk Lance - リスクダッシュボード機能管理
 
 class RiskAnalysisManager {
     constructor() {
         this.initialized = false;
     }
 
-    // リスク分析画面の初期化
+    // リスクダッシュボード画面の初期化
     initializeRiskAnalysis() {
-        if (this.initialized) return;
+        if (this.initialized) {
+            // 2回目以降はイベントリスナーのみ再設定
+            this.setupInsuranceReviewButton();
+            return;
+        }
 
         // 緊急アラートの表示
         this.displayEmergencyAlerts();
@@ -21,10 +25,70 @@ class RiskAnalysisManager {
         // 総合リスクサマリーの更新
         this.updateRiskSummary();
 
+        // 保険見直し依頼ボタンのイベントリスナー設定
+        this.setupInsuranceReviewButton();
+
         this.initialized = true;
     }
 
-    // リスク分析画面更新
+    // 保険見直し依頼ボタンのイベントリスナー設定
+    setupInsuranceReviewButton() {
+        const reviewBtn = document.getElementById('request-inventory-insurance-review');
+        if (reviewBtn) {
+            // 既存のイベントリスナーを削除するため、クローンして置き換え
+            const newBtn = reviewBtn.cloneNode(true);
+            reviewBtn.parentNode.replaceChild(newBtn, reviewBtn);
+
+            // 新しいイベントリスナーを設定
+            newBtn.addEventListener('click', () => {
+                this.requestInsuranceReview();
+            });
+        }
+    }
+
+    // 保険見直し依頼
+    requestInsuranceReview() {
+        // 通知メッセージを表示
+        this.showNotificationMessage('担当代理店に通知しました');
+
+        // ログに記録
+        console.log('保険見直し依頼を送信しました:', new Date().toLocaleString('ja-JP'));
+    }
+
+    // 通知メッセージ表示
+    showNotificationMessage(message) {
+        // 既存の通知があれば削除
+        const existingNotification = document.querySelector('.insurance-review-notification');
+        if (existingNotification) {
+            existingNotification.remove();
+        }
+
+        // 通知メッセージを作成
+        const notification = document.createElement('div');
+        notification.className = 'insurance-review-notification';
+        notification.innerHTML = `
+            <i class="fas fa-check-circle"></i>
+            <span>${message}</span>
+        `;
+
+        // ボディに追加
+        document.body.appendChild(notification);
+
+        // アニメーション表示
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 10);
+
+        // 3秒後に非表示
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 3000);
+    }
+
+    // リスクダッシュボード画面更新
     updateRiskAnalysis() {
         // リスクメーターの更新
         window.chartManager.updateRiskMeters();

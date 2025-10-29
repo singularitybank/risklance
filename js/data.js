@@ -409,6 +409,15 @@ class DataManager {
                     type: 'alert',
                     urgent: true
                 }
+            ],
+            // 過去6ヶ月の在庫金額推移（百万円単位）
+            monthlyValueHistory: [
+                { month: '2024-04', value: 65000000 },  // 6,500万円
+                { month: '2024-05', value: 70000000 },  // 7,000万円
+                { month: '2024-06', value: 74000000 },  // 7,400万円
+                { month: '2024-07', value: 80000000 },  // 8,000万円
+                { month: '2024-08', value: 81000000 },  // 8,100万円
+                { month: '2024-09', value: 82000000 }   // 8,200万円（現在）
             ]
         };
 

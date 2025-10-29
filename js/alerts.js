@@ -3,6 +3,185 @@
 class AlertManager {
     constructor() {
         this.notifications = [];
+        this.notificationDropdownOpen = false;
+        this.initializeNotifications();
+    }
+
+    // 通知システム初期化
+    initializeNotifications() {
+        // デフォルトの通知を追加
+        this.notifications = [
+            {
+                id: 1,
+                type: 'info',
+                title: '取引先からリスク評価レポート提出の要望',
+                message: 'ABC商事様より、取引継続のためリスク評価レポートの提出を依頼されました',
+                icon: 'fas fa-file-alt',
+                timestamp: new Date(),
+                targetScreen: 'risk-branding',
+                unread: true
+            },
+            {
+                id: 2,
+                type: 'warning',
+                title: '火災保険の更新期限',
+                message: '火災保険の更新期限が近づいています（2024年3月15日）',
+                icon: 'fas fa-exclamation-triangle',
+                timestamp: new Date(),
+                targetScreen: 'insurance-portfolio',
+                unread: true
+            },
+            {
+                id: 3,
+                type: 'success',
+                title: 'Risk Lance認定企業ランキング',
+                message: 'Aランクを達成しました',
+                icon: 'fas fa-trophy',
+                timestamp: new Date(),
+                targetScreen: 'risk-branding',
+                unread: true
+            }
+        ];
+
+        // 通知アイコンのクリックイベント設定
+        this.setupNotificationIcon();
+    }
+
+    // 通知アイコンのイベント設定
+    setupNotificationIcon() {
+        const notificationIcon = document.querySelector('.notification-icon');
+        if (notificationIcon) {
+            notificationIcon.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleNotificationDropdown();
+            });
+        }
+
+        // ドロップダウン外をクリックしたら閉じる
+        document.addEventListener('click', (e) => {
+            const dropdown = document.querySelector('.notification-dropdown');
+            if (dropdown && this.notificationDropdownOpen && !dropdown.contains(e.target)) {
+                this.closeNotificationDropdown();
+            }
+        });
+    }
+
+    // 通知ドロップダウンの表示切り替え
+    toggleNotificationDropdown() {
+        if (this.notificationDropdownOpen) {
+            this.closeNotificationDropdown();
+        } else {
+            this.openNotificationDropdown();
+        }
+    }
+
+    // 通知ドロップダウンを開く
+    openNotificationDropdown() {
+        // 既存のドロップダウンを削除
+        const existingDropdown = document.querySelector('.notification-dropdown');
+        if (existingDropdown) {
+            existingDropdown.remove();
+        }
+
+        // ドロップダウンHTML生成
+        const dropdownHtml = this.generateNotificationDropdownHtml();
+
+        // ヘッダーに追加
+        const header = document.querySelector('.header');
+        if (header) {
+            header.insertAdjacentHTML('beforeend', dropdownHtml);
+            this.notificationDropdownOpen = true;
+
+            // 各通知アイテムにクリックイベントを設定
+            this.setupNotificationItemEvents();
+        }
+    }
+
+    // 通知ドロップダウンを閉じる
+    closeNotificationDropdown() {
+        const dropdown = document.querySelector('.notification-dropdown');
+        if (dropdown) {
+            dropdown.remove();
+            this.notificationDropdownOpen = false;
+        }
+    }
+
+    // 通知ドロップダウンHTML生成
+    generateNotificationDropdownHtml() {
+        const notificationsHtml = this.notifications.map(notif => `
+            <div class="notification-dropdown-item ${notif.unread ? 'unread' : ''}" data-notification-id="${notif.id}" data-target-screen="${notif.targetScreen}">
+                <i class="${notif.icon} notification-dropdown-icon ${notif.type}"></i>
+                <div class="notification-dropdown-content">
+                    <div class="notification-dropdown-title">${notif.title}</div>
+                    <div class="notification-dropdown-message">${notif.message}</div>
+                    <div class="notification-dropdown-time">${this.formatTime(notif.timestamp)}</div>
+                </div>
+            </div>
+        `).join('');
+
+        return `
+            <div class="notification-dropdown">
+                <div class="notification-dropdown-header">
+                    <h3>通知</h3>
+                    <span class="notification-count">${this.notifications.filter(n => n.unread).length}件の未読</span>
+                </div>
+                <div class="notification-dropdown-list">
+                    ${notificationsHtml}
+                </div>
+            </div>
+        `;
+    }
+
+    // 通知アイテムのイベント設定
+    setupNotificationItemEvents() {
+        const items = document.querySelectorAll('.notification-dropdown-item');
+        items.forEach(item => {
+            item.addEventListener('click', () => {
+                const notificationId = parseInt(item.dataset.notificationId);
+                const targetScreen = item.dataset.targetScreen;
+                this.handleNotificationClick(notificationId, targetScreen);
+            });
+        });
+    }
+
+    // 通知クリック処理
+    handleNotificationClick(notificationId, targetScreen) {
+        // 通知を既読にする
+        const notification = this.notifications.find(n => n.id === notificationId);
+        if (notification) {
+            notification.unread = false;
+        }
+
+        // 通知バッジを更新
+        this.updateNotificationBadge();
+
+        // ドロップダウンを閉じる
+        this.closeNotificationDropdown();
+
+        // 対象画面に遷移
+        if (targetScreen && window.riskLanceApp) {
+            window.riskLanceApp.switchScreen(targetScreen);
+
+            // サイドバーメニューもアクティブ化
+            const menuItem = document.querySelector(`.menu-item[data-screen="${targetScreen}"]`);
+            if (menuItem) {
+                window.riskLanceApp.updateActiveMenu(menuItem);
+            }
+        }
+    }
+
+    // 時刻フォーマット
+    formatTime(timestamp) {
+        const now = new Date();
+        const diff = now - timestamp;
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        if (minutes < 1) return 'たった今';
+        if (minutes < 60) return `${minutes}分前`;
+        if (hours < 24) return `${hours}時間前`;
+        return `${days}日前`;
     }
 
     // 緊急アラート表示
@@ -151,8 +330,15 @@ class AlertManager {
     updateNotificationBadge() {
         const badge = document.querySelector('.notification-badge');
         if (badge) {
-            const count = Math.floor(Math.random() * 5) + 1;
-            badge.textContent = count;
+            const unreadCount = this.notifications.filter(n => n.unread).length;
+            badge.textContent = unreadCount;
+
+            // 未読がない場合はバッジを非表示
+            if (unreadCount === 0) {
+                badge.style.display = 'none';
+            } else {
+                badge.style.display = 'block';
+            }
         }
     }
 

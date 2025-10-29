@@ -81,7 +81,7 @@
                 </div>
                 <div class="menu-item" data-screen="risk-analysis">
                     <i class="fas fa-chart-line"></i>
-                    <span>リスク分析</span>
+                    <span>リスク・ダッシュボード</span>
                 </div>
                 <div class="menu-item" data-screen="risk-branding">
                     <i class="fas fa-award"></i>
@@ -94,15 +94,13 @@
         <main class="main-content">
             <!-- ダッシュボード -->
             <div id="dashboard" class="content-screen active">
-                <h2>メインポータル</h2>
-
                 <!-- お知らせ -->
                 <div class="notifications-section">
                     <h3>お知らせ</h3>
                     <div class="notification-list">
-                        <div class="notification-item clickable" data-target-tab="insurance-portfolio">
-                            <i class="fas fa-exclamation-triangle warning"></i>
-                            <span>火災保険の更新期限が近づいています（2024年3月15日）</span>
+                        <div class="notification-item alert-item critical clickable" data-target-tab="insurance-portfolio">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>火災保険において補償漏れの可能性があります</span>
                         </div>
                         <div class="notification-item clickable" data-target-tab="risk-analysis">
                             <i class="fas fa-info-circle info"></i>
@@ -508,9 +506,9 @@
                 </div>
             </div>
 
-            <!-- リスク分析 -->
+            <!-- リスクダッシュボード -->
             <div id="risk-analysis" class="content-screen">
-                <h2>リスク分析</h2>
+                <h2>リスクダッシュボード</h2>
 
                 <!-- 必要なアクション -->
                 <div class="action-items">
@@ -569,36 +567,40 @@
                                 <h5>在庫水準推移（過去6ヶ月）</h5>
                                 <div class="bar-chart" id="inventory-chart">
                                     <div class="chart-bars">
-                                        <div class="bar" style="height: 60%" data-value="12M">
+                                        <div class="bar warning" style="height: 65%" data-value="65M">
                                             <span class="bar-label">4月</span>
-                                            <span class="bar-value">12M</span>
+                                            <span class="bar-value">65M</span>
                                         </div>
-                                        <div class="bar" style="height: 75%" data-value="15M">
+                                        <div class="bar warning" style="height: 70%" data-value="70M">
                                             <span class="bar-label">5月</span>
-                                            <span class="bar-value">15M</span>
+                                            <span class="bar-value">70M</span>
                                         </div>
-                                        <div class="bar" style="height: 85%" data-value="17M">
+                                        <div class="bar warning" style="height: 74%" data-value="74M">
                                             <span class="bar-label">6月</span>
-                                            <span class="bar-value">17M</span>
+                                            <span class="bar-value">74M</span>
                                         </div>
-                                        <div class="bar" style="height: 90%" data-value="18M">
+                                        <div class="bar warning" style="height: 80%" data-value="80M">
                                             <span class="bar-label">7月</span>
-                                            <span class="bar-value">18M</span>
+                                            <span class="bar-value">80M</span>
                                         </div>
-                                        <div class="bar" style="height: 95%" data-value="19M">
+                                        <div class="bar warning" style="height: 81%" data-value="81M">
                                             <span class="bar-label">8月</span>
-                                            <span class="bar-value">19M</span>
+                                            <span class="bar-value">81M</span>
                                         </div>
-                                        <div class="bar warning" style="height: 100%" data-value="20M">
+                                        <div class="bar warning" style="height: 82%" data-value="82M">
                                             <span class="bar-label">9月</span>
-                                            <span class="bar-value">20M</span>
+                                            <span class="bar-value">82M</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="risk-assessment">
-                                    <span class="risk-level medium">中リスク</span>
-                                    <span class="coverage-status covered">火災保険: 80%カバー</span>
+                                    <span class="risk-level high">高リスク</span>
+                                    <span class="coverage-status partial">火災保険: 61%カバー（5,000万円/8,200万円）</span>
                                 </div>
+                                <button class="btn btn-primary request-review-btn" id="request-inventory-insurance-review" title="保険見直し依頼を担当代理店に送信します">
+                                    <i class="fas fa-envelope"></i>
+                                    保険見直し依頼
+                                </button>
                             </div>
 
                             <div class="chart-container">
@@ -1113,7 +1115,7 @@
                                 <td>2023/03/15</td>
                                 <td>2024/03/15</td>
                                 <td>建物・設備 5億円</td>
-                                <td><span class="status-warning">更新要</span></td>
+                                <td><span class="status-warning">見直し要</span></td>
                             </tr>
                             <tr class="insurance-row" data-policy-id="2">
                                 <td>賠償責任保険</td>
@@ -1212,7 +1214,7 @@
     <!-- 3. グラフ・チャート機能 -->
     <script src="js/charts.js"></script>
 
-    <!-- 4. リスク分析機能 -->
+    <!-- 4. リスクダッシュボード機能 -->
     <script src="js/risk-analysis.js"></script>
 
     <!-- 5. 業務アプリ機能 -->
