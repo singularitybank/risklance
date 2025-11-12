@@ -5,6 +5,7 @@ class RiskLanceApp {
     constructor() {
         this.currentUser = null;
         this.currentScreen = 'dashboard';
+        this.renderedScreens = new Set(); // 既に描画された画面を追跡
 
         this.init();
     }
@@ -29,11 +30,7 @@ class RiskLanceApp {
             logoutBtn.addEventListener('click', () => this.handleLogout());
         }
 
-        // サイドバーメニュー
-        const menuItems = document.querySelectorAll('.menu-item');
-        menuItems.forEach(item => {
-            item.addEventListener('click', (e) => this.handleMenuClick(e));
-        });
+        // サイドバーメニュー - 動的生成されるため、showMainApp内で初期化
 
         // アクションボタン
         this.setupActionButtons();
@@ -175,11 +172,58 @@ class RiskLanceApp {
         // 指定された画面を表示
         const targetScreen = document.getElementById(screenName);
         if (targetScreen) {
+            // 画面のコンテンツがまだ生成されていない場合は生成
+            if (!this.renderedScreens.has(screenName)) {
+                this.renderScreenContent(screenName);
+                this.renderedScreens.add(screenName);
+            }
+
             targetScreen.classList.add('active');
             this.currentScreen = screenName;
 
             // 画面固有の初期化処理
             this.initializeScreen(screenName);
+        }
+    }
+
+    // 画面のHTMLコンテンツを動的に生成
+    renderScreenContent(screenName) {
+        const screenElement = document.getElementById(screenName);
+        if (!screenElement) return;
+
+        let content = '';
+
+        switch (screenName) {
+            case 'dashboard':
+                if (window.DashboardContentRenderer) {
+                    content = DashboardContentRenderer.render();
+                }
+                break;
+            case 'business-apps':
+                if (window.BusinessAppsContentRenderer) {
+                    content = BusinessAppsContentRenderer.render();
+                }
+                break;
+            case 'risk-analysis':
+                if (window.RiskAnalysisContentRenderer) {
+                    content = RiskAnalysisContentRenderer.render();
+                }
+                break;
+            case 'risk-branding':
+                if (window.RiskBrandingContentRenderer) {
+                    content = RiskBrandingContentRenderer.render();
+                }
+                break;
+            case 'insurance-portfolio':
+                if (window.InsurancePortfolioContentRenderer) {
+                    content = InsurancePortfolioContentRenderer.render();
+                }
+                break;
+        }
+
+        if (content) {
+            screenElement.innerHTML = content;
+            console.log(`✅ ${screenName} のコンテンツが生成されました`);
         }
     }
 
@@ -215,6 +259,22 @@ class RiskLanceApp {
     updateDashboard() {
         // リアルタイムデータの更新をシミュレート
         window.riskAnalysisManager.simulateDataUpdate();
+
+        // UI描画
+        if (window.uiRenderer) {
+            window.uiRenderer.renderDashboard();
+        }
+
+        // 保険ギャップアラートを表示
+        if (window.gapDetector) {
+            window.gapDetector.renderGapAlertsToDashboard();
+        } else if (typeof initializeGapDetector === 'function') {
+            // gapDetectorがまだ初期化されていない場合は初期化してから実行
+            const detector = initializeGapDetector();
+            if (detector) {
+                detector.renderGapAlertsToDashboard();
+            }
+        }
     }
 
     // 業務アプリ更新
@@ -224,12 +284,32 @@ class RiskLanceApp {
 
         // 本日の変更点を更新
         window.businessAppsManager.updateBusinessApps();
+
+        // UI描画
+        if (window.uiRenderer) {
+            // 現在のアクティブなアプリに応じて描画
+            const activeApp = document.querySelector('.business-app-content.active');
+            if (activeApp) {
+                if (activeApp.id === 'sales-app') {
+                    window.uiRenderer.renderSalesApp();
+                } else if (activeApp.id === 'inventory-app') {
+                    window.uiRenderer.renderInventoryApp();
+                } else if (activeApp.id === 'customer-app') {
+                    window.uiRenderer.renderCustomerApp();
+                }
+            }
+        }
     }
 
     // リスク分析更新
     updateRiskAnalysis() {
         // リスクダッシュボード機能の初期化
         window.riskAnalysisManager.initializeRiskAnalysis();
+
+        // UI描画
+        if (window.uiRenderer) {
+            window.uiRenderer.renderRiskAnalysis();
+        }
     }
 
     // リスクブランディング更新
@@ -239,12 +319,24 @@ class RiskLanceApp {
 
         // リアルタイム更新開始
         window.riskBrandingManager.startRealTimeUpdates();
+
+        // UI描画
+        if (window.uiRenderer) {
+            window.uiRenderer.renderRiskBranding();
+        }
     }
 
     // 保険ポートフォリオ更新
     updateInsurancePortfolio() {
         // 保険契約一覧の更新
         window.riskAnalysisManager.updateInsuranceTable();
+
+        // 円形プログレスバーのアニメーション初期化
+        if (window.chartManager) {
+            setTimeout(() => {
+                window.chartManager.updateInsuranceCoverageCircles();
+            }, 100);
+        }
     }
 
     // ログイン画面表示
@@ -256,6 +348,18 @@ class RiskLanceApp {
 
         console.log('初期化時 loginScreen:', loginScreen);
         console.log('初期化時 mainApp:', mainApp);
+
+        // ログイン画面のコンテンツを生成
+        if (loginScreen && window.LoginContentRenderer) {
+            loginScreen.innerHTML = LoginContentRenderer.render();
+            console.log('✅ ログイン画面のコンテンツが生成されました');
+
+            // ログインフォームのイベントリスナーを設定
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+            }
+        }
 
         if (loginScreen) {
             loginScreen.classList.add('active');
@@ -291,6 +395,37 @@ class RiskLanceApp {
             console.log('main-app computedStyle visibility:', window.getComputedStyle(mainApp).visibility);
             console.log('main-app computedStyle opacity:', window.getComputedStyle(mainApp).opacity);
         }
+
+        // サイドバーメニューを動的生成
+        if (window.sidebarComponent) {
+            window.sidebarComponent.render();
+        }
+
+        // ダッシュボードのコンテンツを生成
+        if (!this.renderedScreens.has('dashboard')) {
+            this.renderScreenContent('dashboard');
+            this.renderedScreens.add('dashboard');
+        }
+
+        // 初回ダッシュボード表示時にUIを描画
+        // 少し遅延させてDOMが完全に準備されてから実行
+        setTimeout(() => {
+            // ダッシュボードUI描画
+            if (window.uiRenderer) {
+                window.uiRenderer.renderDashboard();
+            }
+
+            // 保険ギャップアラート表示
+            if (window.gapDetector) {
+                window.gapDetector.renderGapAlertsToDashboard();
+            } else if (typeof initializeGapDetector === 'function') {
+                // gapDetectorがまだ初期化されていない場合は初期化してから実行
+                const detector = initializeGapDetector();
+                if (detector) {
+                    detector.renderGapAlertsToDashboard();
+                }
+            }
+        }, 200);
     }
 
     // ユーザーインターフェース更新

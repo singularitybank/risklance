@@ -449,6 +449,18 @@ class DataManager {
                 }
             ]
         };
+
+        // 従業員データ（労災保険ギャップ検出用）
+        this.data.employeeData = {
+            totalCount: 50,
+            departments: {
+                sales: 15,
+                production: 20,
+                management: 10,
+                support: 5
+            },
+            riskLevel: 'medium'
+        };
     }
 
     // リーグデータ取得
@@ -474,6 +486,50 @@ class DataManager {
     // 顧客データ取得
     getCustomerData() {
         return this.data.customerData;
+    }
+
+    // 従業員データ取得
+    getEmployeeData() {
+        return this.data.employeeData;
+    }
+
+    // ダッシュボード用のフォーマット済みデータ取得
+    getDashboardData() {
+        return {
+            sales: {
+                monthly: this.formatCurrency(this.data.salesData.monthlySales),
+                monthlyRaw: this.data.salesData.monthlySales,
+                today: this.formatCurrency(this.data.salesData.todaySales),
+                todayRaw: this.data.salesData.todaySales,
+                pending: this.data.salesData.pendingOrders,
+                change: this.data.businessData.sales.change
+            },
+            inventory: {
+                items: this.data.inventoryData.totalItems,
+                value: this.formatCurrency(this.data.inventoryData.totalValue),
+                valueRaw: this.data.inventoryData.totalValue,
+                alerts: this.data.inventoryData.alertItems,
+                change: this.data.businessData.inventory.change
+            },
+            customers: {
+                active: this.data.customerData.activeCustomers,
+                opportunities: this.data.customerData.activeOpportunities,
+                newThisMonth: this.data.customerData.newThisMonth,
+                change: this.data.businessData.customers.change
+            },
+            insurance: {
+                contracts: this.data.businessData.insurance.contracts,
+                status: this.data.businessData.insurance.status
+            },
+            riskScore: this.data.riskData.totalScore,
+            riskCategories: this.data.riskData.categories,
+            league: this.data.leagueData.currentUser
+        };
+    }
+
+    // 通貨フォーマット
+    formatCurrency(amount) {
+        return '¥' + amount.toLocaleString('ja-JP');
     }
 
     // データ更新メソッド

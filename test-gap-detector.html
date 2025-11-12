@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保険ギャップ検出エンジン - テスト</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/gap-detector.css">
+    <style>
+        body {
+            font-family: 'Meiryo', 'Yu Gothic', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .test-header {
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .test-header h1 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .test-section {
+            margin-bottom: 40px;
+        }
+        .test-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        .test-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .test-result {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .test-result pre {
+            background: #fff;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        #gap-alerts-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>
+                <i class="fas fa-flask"></i>
+                保険ギャップ検出エンジン - テスト
+            </h1>
+            <p>各機能をテストして、正しく動作するか確認します。</p>
+        </div>
+
+        <!-- テストセクション1: データ初期化 -->
+        <div class="test-section">
+            <h2>
+                <i class="fas fa-database"></i>
+                1. データ初期化テスト
+            </h2>
+            <button class="test-btn" onclick="testDataInitialization()">
+                データ初期化を実行
+            </button>
+            <div id="data-init-result"></div>
+        </div>
+
+        <!-- テストセクション2: 在庫ギャップ検出 -->
+        <div class="test-section">
+            <h2>
+                <i class="fas fa-boxes"></i>
+                2. 在庫ギャップ検出テスト
+            </h2>
+            <button class="test-btn" onclick="testInventoryGap()">
+                在庫ギャップを検出
+            </button>
+            <div id="inventory-gap-result"></div>
+        </div>
+
+        <!-- テストセクション3: 賠償責任ギャップ検出 -->
+        <div class="test-section">
+            <h2>
+                <i class="fas fa-handshake"></i>
+                3. 賠償責任保険ギャップ検出テスト
+            </h2>
+            <button class="test-btn" onclick="testLiabilityGap()">
+                賠償責任ギャップを検出
+            </button>
+            <div id="liability-gap-result"></div>
+        </div>
+
+        <!-- テストセクション4: 労災ギャップ検出 -->
+        <div class="test-section">
+            <h2>
+                <i class="fas fa-user-shield"></i>
+                4. 労災保険ギャップ検出テスト
+            </h2>
+            <button class="test-btn" onclick="testWorkersCompGap()">
+                労災ギャップを検出
+            </button>
+            <div id="wc-gap-result"></div>
+        </div>
+
+        <!-- テストセクション5: 総合分析 -->
+        <div class="test-section">
+            <h2>
+                <i class="fas fa-chart-pie"></i>
+                5. 総合ギャップ分析テスト
+            </h2>
+            <button class="test-btn" onclick="testAnalyzeAllGaps()">
+                総合分析を実行
+            </button>
+            <div id="analyze-all-result"></div>
+        </div>
+
+        <!-- テストセクション6: UI表示テスト -->
+        <div class="test-section">
+            <h2>
+                <i class="fas fa-desktop"></i>
+                6. UI表示テスト
+            </h2>
+            <button class="test-btn" onclick="testUIDisplay()">
+                ギャップアラートUIを表示
+            </button>
+            <button class="test-btn" onclick="testModalDisplay()">
+                詳細モーダルを表示
+            </button>
+            <div id="gap-alerts-container"></div>
+        </div>
+
+        <!-- テストセクション7: 統合テスト -->
+        <div class="test-section">
+            <h2>
+                <i class="fas fa-check-double"></i>
+                7. 統合テスト
+            </h2>
+            <button class="test-btn" onclick="runAllTests()">
+                <i class="fas fa-play"></i> すべてのテストを実行
+            </button>
+            <div id="all-tests-result"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript読み込み -->
+    <script src="js/data.js"></script>
+    <script src="js/insurance-manager.js"></script>
+    <script src="js/insurance-gap-detector.js"></script>
+
+    <!-- テストスクリプト -->
+    <script>
+        // テスト結果を表示するヘルパー関数
+        function displayResult(containerId, title, status, message, data = null) {
+            const container = document.getElementById(containerId);
+            const statusClass = status === 'success' ? 'success' : status === 'error' ? 'error' : 'info';
+
+            let html = `
+                <div class="test-result">
+                    <h3>
+                        ${title}
+                        <span class="status ${statusClass}">${status.toUpperCase()}</span>
+                    </h3>
+                    <p>${message}</p>
+            `;
+
+            if (data) {
+                html += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            }
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        // 1. データ初期化テスト
+        function testDataInitialization() {
+            try {
+                // DataManagerの確認
+                if (typeof window.dataManager === 'undefined') {
+                    displayResult('data-init-result', 'データ初期化', 'error',
+                        'DataManagerが見つかりません。js/data.jsが読み込まれているか確認してください。');
+                    return;
+                }
+
+                // InsuranceManagerの確認
+                if (typeof window.insuranceManager === 'undefined') {
+                    displayResult('data-init-result', 'データ初期化', 'error',
+                        'InsuranceManagerが見つかりません。js/insurance-manager.jsが読み込まれているか確認してください。');
+                    return;
+                }
+
+                // GapDetectorの確認
+                if (typeof window.gapDetector === 'undefined') {
+                    displayResult('data-init-result', 'データ初期化', 'error',
+                        'GapDetectorが見つかりません。js/insurance-gap-detector.jsが読み込まれているか確認してください。');
+                    return;
+                }
+
+                const testData = {
+                    dataManager: typeof window.dataManager,
+                    insuranceManager: typeof window.insuranceManager,
+                    gapDetector: typeof window.gapDetector,
+                    inventoryData: window.dataManager.getInventoryData() ? 'OK' : 'NG',
+                    salesData: window.dataManager.getSalesData() ? 'OK' : 'NG',
+                    insurancePolicies: Object.keys(window.insuranceManager.policyData).length
+                };
+
+                displayResult('data-init-result', 'データ初期化', 'success',
+                    'すべてのマネージャーが正常に読み込まれました。', testData);
+            } catch (error) {
+                displayResult('data-init-result', 'データ初期化', 'error',
+                    `エラーが発生しました: ${error.message}`);
+            }
+        }
+
+        // 2. 在庫ギャップ検出テスト
+        function testInventoryGap() {
+            try {
+                const result = window.gapDetector.detectInventoryGap();
+
+                if (result.hasGap) {
+                    displayResult('inventory-gap-result', '在庫ギャップ検出', 'info',
+                        `在庫ギャップを検出しました！不足額: ${window.gapDetector.formatCurrency(result.gap)}`, result);
+                } else {
+                    displayResult('inventory-gap-result', '在庫ギャップ検出', 'success',
+                        '在庫ギャップは検出されませんでした。', result);
+                }
+            } catch (error) {
+                displayResult('inventory-gap-result', '在庫ギャップ検出', 'error',
+                    `エラーが発生しました: ${error.message}`);
+            }
+        }
+
+        // 3. 賠償責任ギャップ検出テスト
+        function testLiabilityGap() {
+            try {
+                const result = window.gapDetector.detectLiabilityGap();
+
+                if (result.hasGap) {
+                    displayResult('liability-gap-result', '賠償責任ギャップ検出', 'info',
+                        `賠償責任保険のギャップを検出しました！不足額: ${window.gapDetector.formatCurrency(result.gap)}`, result);
+                } else {
+                    displayResult('liability-gap-result', '賠償責任ギャップ検出', 'success',
+                        '賠償責任保険のギャップは検出されませんでした。', result);
+                }
+            } catch (error) {
+                displayResult('liability-gap-result', '賠償責任ギャップ検出', 'error',
+                    `エラーが発生しました: ${error.message}`);
+            }
+        }
+
+        // 4. 労災ギャップ検出テスト
+        function testWorkersCompGap() {
+            try {
+                const result = window.gapDetector.detectWorkersCompGap();
+
+                if (result.hasGap) {
+                    displayResult('wc-gap-result', '労災ギャップ検出', 'info',
+                        `労災保険のギャップを検出しました！不足額: ${window.gapDetector.formatCurrency(result.gap)}`, result);
+                } else {
+                    displayResult('wc-gap-result', '労災ギャップ検出', 'success',
+                        '労災保険のギャップは検出されませんでした。', result);
+                }
+            } catch (error) {
+                displayResult('wc-gap-result', '労災ギャップ検出', 'error',
+                    `エラーが発生しました: ${error.message}`);
+            }
+        }
+
+        // 5. 総合分析テスト
+        function testAnalyzeAllGaps() {
+            try {
+                const analysis = window.gapDetector.analyzeAllGaps();
+
+                const message = `
+                    検出されたギャップ: ${analysis.totalGaps}件<br>
+                    総不足額: ${window.gapDetector.formatCurrency(analysis.totalGapAmount)}<br>
+                    リスクスコア改善: ${analysis.riskScoreImpact.current}点 → ${analysis.riskScoreImpact.potential}点 (+${analysis.riskScoreImpact.improvement}点)
+                `;
+
+                displayResult('analyze-all-result', '総合ギャップ分析', 'success', message, analysis);
+            } catch (error) {
+                displayResult('analyze-all-result', '総合ギャップ分析', 'error',
+                    `エラーが発生しました: ${error.message}`);
+            }
+        }
+
+        // 6. UI表示テスト
+        function testUIDisplay() {
+            try {
+                const analysis = window.gapDetector.analyzeAllGaps();
+                const container = document.getElementById('gap-alerts-container');
+
+                if (analysis.totalGaps === 0) {
+                    container.innerHTML = `
+                        <div class="no-gaps-message">
+                            <i class="fas fa-check-circle"></i>
+                            <p>保険ギャップは検出されませんでした</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = `
+                    <div class="gaps-summary">
+                        <div class="gaps-count">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span class="count">${analysis.totalGaps}</span>
+                            <span class="label">件の保険ギャップ</span>
+                        </div>
+                        <div class="gaps-amount">
+                            総不足額: <strong>${window.gapDetector.formatCurrency(analysis.totalGapAmount)}</strong>
+                        </div>
+                    </div>
+
+                    <div class="gaps-list">
+                `;
+
+                analysis.gaps.forEach(gap => {
+                    const urgencyClass = gap.urgency === 'high' ? 'urgent' : 'warning';
+                    const urgencyIcon = gap.urgency === 'high' ? '🔴' : '🟡';
+
+                    html += `
+                        <div class="gap-item ${urgencyClass}">
+                            <div class="gap-header">
+                                <span class="urgency-icon">${urgencyIcon}</span>
+                                <h4>${gap.category}</h4>
+                            </div>
+                            <div class="gap-details">
+                                <div class="gap-amount">
+                                    不足額: <strong>${window.gapDetector.formatCurrency(gap.gap)}</strong>
+                                </div>
+                                <div class="gap-recommendation">
+                                    ${gap.recommendation.title}
+                                </div>
+                            </div>
+                            <button class="view-detail-btn" onclick="viewGapDetail('${gap.category}')">
+                                詳細を見る <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    `;
+                });
+
+                html += `</div>`;
+                container.innerHTML = html;
+
+                displayResult('gap-alerts-container', 'UI表示テスト', 'success',
+                    'ギャップアラートUIが正常に表示されました。');
+            } catch (error) {
+                displayResult('gap-alerts-container', 'UI表示テスト', 'error',
+                    `エラーが発生しました: ${error.message}`);
+            }
+        }
+
+        // モーダル表示テスト
+        function testModalDisplay() {
+            try {
+                const analysis = window.gapDetector.analyzeAllGaps();
+
+                if (analysis.totalGaps === 0) {
+                    alert('ギャップが検出されていないため、モーダルをテストできません。');
+                    return;
+                }
+
+                // 最初のギャップの詳細モーダルを表示
+                window.gapDetector.showGapDetailModal(analysis.gaps[0].category);
+
+                console.log('✅ モーダルが表示されました');
+            } catch (error) {
+                alert(`エラーが発生しました: ${error.message}`);
+                console.error(error);
+            }
+        }
+
+        // 7. すべてのテストを実行
+        function runAllTests() {
+            const container = document.getElementById('all-tests-result');
+            container.innerHTML = '<div class="test-result"><p><i class="fas fa-spinner fa-spin"></i> テストを実行中...</p></div>';
+
+            setTimeout(() => {
+                try {
+                    testDataInitialization();
+                    setTimeout(() => testInventoryGap(), 100);
+                    setTimeout(() => testLiabilityGap(), 200);
+                    setTimeout(() => testWorkersCompGap(), 300);
+                    setTimeout(() => testAnalyzeAllGaps(), 400);
+                    setTimeout(() => testUIDisplay(), 500);
+
+                    setTimeout(() => {
+                        displayResult('all-tests-result', '統合テスト', 'success',
+                            'すべてのテストが完了しました。各セクションの結果を確認してください。');
+                    }, 600);
+                } catch (error) {
+                    displayResult('all-tests-result', '統合テスト', 'error',
+                        `エラーが発生しました: ${error.message}`);
+                }
+            }, 100);
+        }
+
+        // ページ読み込み時に自動実行
+        window.addEventListener('load', function() {
+            console.log('=== 保険ギャップ検出エンジン テストページ ===');
+            console.log('ページが読み込まれました。テストを開始できます。');
+
+            // 自動でデータ初期化テストを実行
+            setTimeout(() => {
+                testDataInitialization();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

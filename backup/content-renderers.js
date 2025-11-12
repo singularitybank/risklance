@@ -1,0 +1,1021 @@
+// Risk Lance - コンテンツレンダラー
+// 各画面の完全なHTML構造を動的に生成
+
+class ContentRenderers {
+    /**
+     * ダッシュボード画面のコンテンツを生成
+     */
+    static renderDashboardContent() {
+        return `
+            <!-- お知らせ -->
+            <div class="notifications-section">
+                <h3>お知らせ</h3>
+                <div class="notification-list" id="notification-list">
+                    <!-- 通知はJavaScriptで動的に生成されます -->
+                </div>
+            </div>
+
+            <!-- 保険ギャップ検出アラート -->
+            <div id="insurance-gap-alerts-container"></div>
+
+            <!-- ダッシュボードカード -->
+            <div class="dashboard-cards" id="dashboard-cards">
+                <!-- カードはJavaScriptで動的に生成されます -->
+            </div>
+
+            <!-- リスクダッシュボード -->
+            <div class="risk-dashboard" id="risk-dashboard-summary">
+                <h3>リスクダッシュボード（総合版）</h3>
+                <div class="risk-overview">
+                    <!-- リスクダッシュボードはJavaScriptで動的に生成されます -->
+                </div>
+            </div>
+
+            <!-- ステータス -->
+            <div class="status-section" id="status-section">
+                <!-- ステータスはJavaScriptで動的に生成されます -->
+            </div>
+        `;
+    }
+
+    /**
+     * 業務アプリ画面のコンテンツを生成
+     */
+    static renderBusinessAppsContent() {
+        return `
+            <h2>業務アプリ</h2>
+
+            <!-- 業務アプリタブナビゲーション -->
+            <div class="business-app-tabs">
+                <button class="tab-button active" data-app="sales">
+                    <i class="fas fa-chart-line"></i>
+                    販売管理
+                </button>
+                <button class="tab-button" data-app="inventory">
+                    <i class="fas fa-boxes"></i>
+                    在庫管理
+                </button>
+                <button class="tab-button" data-app="customer">
+                    <i class="fas fa-users"></i>
+                    顧客管理
+                </button>
+            </div>
+
+            ${ContentRenderers.renderSalesApp()}
+            ${ContentRenderers.renderInventoryApp()}
+            ${ContentRenderers.renderCustomerApp()}
+        `;
+    }
+
+    /**
+     * 販売管理アプリを生成
+     */
+    static renderSalesApp() {
+        return `
+            <!-- 販売管理アプリ -->
+            <div id="sales-app" class="business-app-content active">
+                <div class="app-layout">
+                    <!-- 左側: ナビゲーション -->
+                    <div class="app-navigation">
+                        <h3>販売管理メニュー</h3>
+                        <nav class="app-nav-menu">
+                            <button class="nav-item active" data-section="dashboard">
+                                <i class="fas fa-tachometer-alt"></i>
+                                ダッシュボード
+                            </button>
+                            <button class="nav-item" data-section="orders">
+                                <i class="fas fa-shopping-cart"></i>
+                                受注管理
+                            </button>
+                            <button class="nav-item" data-section="invoices">
+                                <i class="fas fa-file-invoice"></i>
+                                請求書管理
+                            </button>
+                            <button class="nav-item" data-section="reports">
+                                <i class="fas fa-chart-bar"></i>
+                                売上レポート
+                            </button>
+                            <button class="nav-item" data-section="settings">
+                                <i class="fas fa-cog"></i>
+                                設定
+                            </button>
+                        </nav>
+                    </div>
+
+                    <!-- 右側: コンテンツエリア -->
+                    <div class="app-main-content">
+                        <!-- ダッシュボード -->
+                        <div class="app-section active" id="sales-dashboard">
+                            <h4>販売管理ダッシュボード</h4>
+                            <div class="recent-activities">
+                                <h5>直近の入力内容</h5>
+                                <div class="activity-list">
+                                    <!-- アクティビティはJavaScriptで動的に生成されます -->
+                                </div>
+                            </div>
+
+                            <div class="quick-stats">
+                                <div class="stat-card">
+                                    <h6>今日の売上</h6>
+                                    <span class="stat-value">¥0</span>
+                                </div>
+                                <div class="stat-card">
+                                    <h6>今月の売上</h6>
+                                    <span class="stat-value">¥0</span>
+                                </div>
+                                <div class="stat-card">
+                                    <h6>未処理受注</h6>
+                                    <span class="stat-value">0件</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 受注管理 -->
+                        <div class="app-section" id="sales-orders">
+                            <h4>受注管理</h4>
+                            <div class="recent-activities">
+                                <h5>最新の受注情報</h5>
+                                <div class="order-list">
+                                    <!-- 受注はJavaScriptで動的に生成されます -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- その他のセクション -->
+                        <div class="app-section" id="sales-invoices">
+                            <h4>請求書管理</h4>
+                            <p>請求書管理機能は開発中です。</p>
+                        </div>
+
+                        <div class="app-section" id="sales-reports">
+                            <h4>売上レポート</h4>
+                            <p>売上レポート機能は開発中です。</p>
+                        </div>
+
+                        <div class="app-section" id="sales-settings">
+                            <h4>設定</h4>
+                            <p>設定画面は開発中です。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * 在庫管理アプリを生成
+     */
+    static renderInventoryApp() {
+        return `
+            <!-- 在庫管理アプリ -->
+            <div id="inventory-app" class="business-app-content">
+                <div class="app-layout">
+                    <div class="app-navigation">
+                        <h3>在庫管理メニュー</h3>
+                        <nav class="app-nav-menu">
+                            <button class="nav-item active" data-section="dashboard">
+                                <i class="fas fa-tachometer-alt"></i>
+                                ダッシュボード
+                            </button>
+                            <button class="nav-item" data-section="stock">
+                                <i class="fas fa-warehouse"></i>
+                                在庫一覧
+                            </button>
+                            <button class="nav-item" data-section="movements">
+                                <i class="fas fa-exchange-alt"></i>
+                                入出庫履歴
+                            </button>
+                            <button class="nav-item" data-section="alerts">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                在庫アラート
+                            </button>
+                        </nav>
+                    </div>
+                    <div class="app-main-content">
+                        <div class="app-section active" id="inventory-dashboard">
+                            <h4>在庫管理ダッシュボード</h4>
+                            <div class="recent-activities">
+                                <h5>直近の入出庫記録</h5>
+                                <div class="activity-list">
+                                    <!-- アクティビティはJavaScriptで動的に生成されます -->
+                                </div>
+                            </div>
+
+                            <div class="quick-stats">
+                                <div class="stat-card">
+                                    <h6>総在庫アイテム</h6>
+                                    <span class="stat-value">0</span>
+                                </div>
+                                <div class="stat-card">
+                                    <h6>在庫総額</h6>
+                                    <span class="stat-value">¥0</span>
+                                </div>
+                                <div class="stat-card alert">
+                                    <h6>要注意在庫</h6>
+                                    <span class="stat-value">0件</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * 顧客管理アプリを生成
+     */
+    static renderCustomerApp() {
+        return `
+            <!-- 顧客管理アプリ -->
+            <div id="customer-app" class="business-app-content">
+                <div class="app-layout">
+                    <div class="app-navigation">
+                        <h3>顧客管理メニュー</h3>
+                        <nav class="app-nav-menu">
+                            <button class="nav-item active" data-section="dashboard">
+                                <i class="fas fa-tachometer-alt"></i>
+                                ダッシュボード
+                            </button>
+                            <button class="nav-item" data-section="customers">
+                                <i class="fas fa-address-book"></i>
+                                顧客一覧
+                            </button>
+                            <button class="nav-item" data-section="opportunities">
+                                <i class="fas fa-handshake"></i>
+                                商談管理
+                            </button>
+                            <button class="nav-item" data-section="follow-ups">
+                                <i class="fas fa-calendar-check"></i>
+                                フォローアップ
+                            </button>
+                        </nav>
+                    </div>
+                    <div class="app-main-content">
+                        <div class="app-section active" id="customer-dashboard">
+                            <h4>顧客管理ダッシュボード</h4>
+                            <div class="recent-activities">
+                                <h5>直近の顧客活動</h5>
+                                <div class="activity-list">
+                                    <!-- アクティビティはJavaScriptで動的に生成されます -->
+                                </div>
+                            </div>
+
+                            <div class="quick-stats">
+                                <div class="stat-card">
+                                    <h6>アクティブ顧客</h6>
+                                    <span class="stat-value">0</span>
+                                </div>
+                                <div class="stat-card">
+                                    <h6>進行中商談</h6>
+                                    <span class="stat-value">0</span>
+                                </div>
+                                <div class="stat-card">
+                                    <h6>今月新規</h6>
+                                    <span class="stat-value">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * リスクダッシュボード画面のコンテンツを生成
+     */
+    static renderRiskAnalysisContent() {
+        return `
+            <h2>リスクダッシュボード</h2>
+
+            <!-- 必要なアクション -->
+            <div class="action-items">
+                <h3>必要なアクション</h3>
+                <div class="action-list">
+                    <div class="action-item high">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <div class="action-content">
+                            <h4>火災保険の補償内容見直し</h4>
+                            <p>現在の事業規模に対して補償額が不足している可能性があります</p>
+                        </div>
+                        <button class="action-btn">対応する</button>
+                    </div>
+                    <div class="action-item medium">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div class="action-content">
+                            <h4>サイバーセキュリティ保険の検討</h4>
+                            <p>IT資産の増加に伴い、サイバーリスクが高まっています</p>
+                        </div>
+                        <button class="action-btn">詳細を見る</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- リスクダッシュボード詳細 -->
+            <div class="detailed-risk-dashboard">
+                <h3>総合リスクダッシュボード</h3>
+
+                <!-- 緊急アラート -->
+                <div class="emergency-alerts">
+                    <div class="alert-item critical">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div class="alert-content">
+                            <h4>緊急: 洪水リスク警告</h4>
+                            <p>倉庫所在地（埼玉県越谷市）で48時間以内に洪水発生の可能性（65%）</p>
+                            <span class="coverage-status uncovered">保険カバー: なし</span>
+                        </div>
+                        <button class="alert-action">対策を確認</button>
+                    </div>
+                    <div class="alert-item high">
+                        <i class="fas fa-building"></i>
+                        <div class="alert-content">
+                            <h4>取引先信用リスク</h4>
+                            <p>主要取引先の関連会社（ABC商事関連2社）が債務超過状態</p>
+                            <span class="coverage-status partial">保険カバー: 部分的</span>
+                        </div>
+                        <button class="alert-action">詳細確認</button>
+                    </div>
+                </div>
+
+                ${ContentRenderers.renderInternalRiskAnalysis()}
+                ${ContentRenderers.renderExternalRiskAnalysis()}
+                ${ContentRenderers.renderRiskSummary()}
+            </div>
+        `;
+    }
+
+    /**
+     * 社内リスク分析セクションを生成
+     */
+    static renderInternalRiskAnalysis() {
+        return `
+            <!-- 社内リスク分析 -->
+            <div class="risk-section">
+                <h4>社内リスク分析</h4>
+                <div class="risk-analysis-grid">
+                    <div class="chart-container">
+                        <h5>在庫水準推移（過去6ヶ月）</h5>
+                        <div class="bar-chart" id="inventory-chart">
+                            <div class="chart-bars">
+                                <div class="bar warning" style="height: 65%" data-value="65M">
+                                    <span class="bar-label">4月</span>
+                                    <span class="bar-value">65M</span>
+                                </div>
+                                <div class="bar warning" style="height: 70%" data-value="70M">
+                                    <span class="bar-label">5月</span>
+                                    <span class="bar-value">70M</span>
+                                </div>
+                                <div class="bar warning" style="height: 74%" data-value="74M">
+                                    <span class="bar-label">6月</span>
+                                    <span class="bar-value">74M</span>
+                                </div>
+                                <div class="bar warning" style="height: 80%" data-value="80M">
+                                    <span class="bar-label">7月</span>
+                                    <span class="bar-value">80M</span>
+                                </div>
+                                <div class="bar warning" style="height: 81%" data-value="81M">
+                                    <span class="bar-label">8月</span>
+                                    <span class="bar-value">81M</span>
+                                </div>
+                                <div class="bar warning" style="height: 82%" data-value="82M">
+                                    <span class="bar-label">9月</span>
+                                    <span class="bar-value">82M</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="risk-assessment">
+                            <span class="risk-level high">高リスク</span>
+                            <span class="coverage-status partial">火災保険: 61%カバー（5,000万円/8,200万円）</span>
+                        </div>
+                        <button class="btn btn-primary request-review-btn" id="request-inventory-insurance-review" title="保険見直し依頼を担当代理店に送信します">
+                            <i class="fas fa-envelope"></i>
+                            保険見直し依頼
+                        </button>
+                    </div>
+
+                    <div class="chart-container">
+                        <h5>従業員リスク分布</h5>
+                        <div class="pie-chart" id="employee-risk-chart">
+                            <div class="pie-slice slice-1" style="--percentage: 40"></div>
+                            <div class="pie-slice slice-2" style="--percentage: 35"></div>
+                            <div class="pie-slice slice-3" style="--percentage: 25"></div>
+                            <div class="pie-center">
+                                <span class="total-employees">245名</span>
+                            </div>
+                        </div>
+                        <div class="pie-legend">
+                            <div class="legend-item">
+                                <span class="legend-color slice-1-color"></span>
+                                <span>安全作業者 (40%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color slice-2-color"></span>
+                                <span>注意必要 (35%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color slice-3-color"></span>
+                                <span>高リスク (25%)</span>
+                            </div>
+                        </div>
+                        <div class="risk-assessment">
+                            <span class="risk-level high">高リスク</span>
+                            <span class="coverage-status covered">労災保険: 100%カバー</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <h5>システム脆弱性トレンド</h5>
+                        <div class="line-chart" id="vulnerability-chart">
+                            <div class="chart-grid">
+                                <div class="grid-line"></div>
+                                <div class="grid-line"></div>
+                                <div class="grid-line"></div>
+                                <div class="grid-line"></div>
+                            </div>
+                            <svg class="line-chart-svg" viewBox="0 0 300 150">
+                                <polyline points="10,130 60,100 110,80 160,60 210,45 260,70" stroke="#e74c3c" stroke-width="3" fill="none"/>
+                                <circle cx="260" cy="70" r="4" fill="#e74c3c"/>
+                            </svg>
+                            <div class="chart-labels">
+                                <span>4月</span>
+                                <span>5月</span>
+                                <span>6月</span>
+                                <span>7月</span>
+                                <span>8月</span>
+                                <span>9月</span>
+                            </div>
+                        </div>
+                        <div class="risk-assessment">
+                            <span class="risk-level high">高リスク</span>
+                            <span class="coverage-status uncovered">サイバー保険: 未加入</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * 社外リスク分析セクションを生成
+     */
+    static renderExternalRiskAnalysis() {
+        return `
+            <!-- 社外リスク分析 -->
+            <div class="risk-section">
+                <h4>社外リスク分析</h4>
+                <div class="risk-analysis-grid">
+                    <div class="chart-container">
+                        <h5>地域別災害リスク</h5>
+                        <div class="disaster-risk-map">
+                            <div class="risk-region high-risk" data-region="埼玉倉庫">
+                                <i class="fas fa-water"></i>
+                                <span class="region-name">埼玉倉庫</span>
+                                <span class="risk-value">洪水リスク: 65%</span>
+                            </div>
+                            <div class="risk-region medium-risk" data-region="東京本社">
+                                <i class="fas fa-home"></i>
+                                <span class="region-name">東京本社</span>
+                                <span class="risk-value">地震リスク: 35%</span>
+                            </div>
+                            <div class="risk-region low-risk" data-region="大阪支店">
+                                <i class="fas fa-building"></i>
+                                <span class="region-name">大阪支店</span>
+                                <span class="risk-value">総合リスク: 15%</span>
+                            </div>
+                        </div>
+                        <div class="risk-assessment">
+                            <span class="risk-level high">高リスク</span>
+                            <span class="coverage-status partial">災害保険: 部分カバー</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <h5>取引先信用リスク</h5>
+                        <div class="credit-risk-chart">
+                            <div class="risk-companies">
+                                <!-- 取引先リスクはJavaScriptで動的に生成されます -->
+                            </div>
+                        </div>
+                        <div class="risk-assessment">
+                            <span class="risk-level high">高リスク</span>
+                            <span class="coverage-status partial">取引信用保険: 60%カバー</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <h5>市場環境リスク</h5>
+                        <div class="market-risk-gauge">
+                            <div class="gauge-container">
+                                <div class="gauge">
+                                    <div class="gauge-needle" style="transform: rotate(45deg)"></div>
+                                </div>
+                                <div class="gauge-labels">
+                                    <span class="low">低</span>
+                                    <span class="medium">中</span>
+                                    <span class="high">高</span>
+                                </div>
+                            </div>
+                            <div class="market-factors">
+                                <div class="factor">
+                                    <span class="factor-name">原材料価格</span>
+                                    <span class="factor-trend up">↗ +15%</span>
+                                </div>
+                                <div class="factor">
+                                    <span class="factor-name">為替変動</span>
+                                    <span class="factor-trend down">↘ -8%</span>
+                                </div>
+                                <div class="factor">
+                                    <span class="factor-name">競合他社</span>
+                                    <span class="factor-trend up">↗ +3社</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="risk-assessment">
+                            <span class="risk-level medium">中リスク</span>
+                            <span class="coverage-status uncovered">市場リスク: 保険適用外</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * リスクサマリーセクションを生成
+     */
+    static renderRiskSummary() {
+        return `
+            <!-- 総合リスクサマリー -->
+            <div class="risk-summary">
+                <h4>総合リスクサマリー</h4>
+                <div class="summary-cards">
+                    <div class="summary-card critical">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <div class="card-content">
+                            <h5>緊急対応必要</h5>
+                            <span class="count">2件</span>
+                        </div>
+                    </div>
+                    <div class="summary-card high">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div class="card-content">
+                            <h5>高リスク</h5>
+                            <span class="count">5件</span>
+                        </div>
+                    </div>
+                    <div class="summary-card medium">
+                        <i class="fas fa-info-circle"></i>
+                        <div class="card-content">
+                            <h5>中リスク</h5>
+                            <span class="count">8件</span>
+                        </div>
+                    </div>
+                    <div class="summary-card coverage">
+                        <i class="fas fa-shield-alt"></i>
+                        <div class="card-content">
+                            <h5>保険カバー率</h5>
+                            <span class="percentage">68%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * リスクブランディング画面のコンテンツを生成
+     */
+    static renderRiskBrandingContent() {
+        return `
+            <h2>リスク・ブランディング</h2>
+
+            <!-- リスクレポート発行 -->
+            <div class="report-actions">
+                <button class="report-generate-btn" id="generate-report-btn">
+                    <i class="fas fa-file-pdf"></i>
+                    リスクレポート発行
+                </button>
+                <div class="report-options">
+                    <select id="report-type">
+                        <option value="comprehensive">総合リスクレポート</option>
+                        <option value="monthly">月次リスクレポート</option>
+                        <option value="insurance">保険カバレッジレポート</option>
+                        <option value="compliance">コンプライアンスレポート</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="branding-overview">
+                ${ContentRenderers.renderLeagueStatus()}
+                ${ContentRenderers.renderLeagueRankings()}
+                ${ContentRenderers.renderGuildSystem()}
+            </div>
+        `;
+    }
+
+    /**
+     * リーグステータスセクションを生成
+     */
+    static renderLeagueStatus() {
+        return `
+            <!-- 企業リーグステータス -->
+            <div class="enterprise-league-section">
+                <h3>Risk Lance認定企業ステータス</h3>
+                <div class="league-status-card">
+                    <div class="current-league">
+                        <div class="league-emblem gold">
+                            <i class="fas fa-medal"></i>
+                            <span class="league-name">GOLD</span>
+                        </div>
+                        <div class="league-info">
+                            <h4>株式会社サンプル</h4>
+                            <p class="league-title">Gold League企業</p>
+                            <div class="league-progress">
+                                <span class="current-points">2,450 LP</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 65%"></div>
+                                </div>
+                                <span class="next-tier">次のリーグまで 350 LP</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="risk-assessment-breakdown">
+                        <h5>リスク体制評価</h5>
+                        <div class="assessment-categories">
+                            <div class="category-score">
+                                <span class="category">火災対策</span>
+                                <div class="level-indicator level-4">
+                                    <span class="level">Lv.4</span>
+                                    <div class="stars">★★★★☆</div>
+                                </div>
+                            </div>
+                            <div class="category-score">
+                                <span class="category">サイバーセキュリティ</span>
+                                <div class="level-indicator level-3">
+                                    <span class="level">Lv.3</span>
+                                    <div class="stars">★★★☆☆</div>
+                                </div>
+                            </div>
+                            <div class="category-score">
+                                <span class="category">コンプライアンス</span>
+                                <div class="level-indicator level-5">
+                                    <span class="level">Lv.5</span>
+                                    <div class="stars">★★★★★</div>
+                                </div>
+                            </div>
+                            <div class="category-score">
+                                <span class="category">BCP対策</span>
+                                <div class="level-indicator level-3">
+                                    <span class="level">Lv.3</span>
+                                    <div class="stars">★★★☆☆</div>
+                                </div>
+                            </div>
+                            <div class="category-score">
+                                <span class="category">財務リスク</span>
+                                <div class="level-indicator level-4">
+                                    <span class="level">Lv.4</span>
+                                    <div class="stars">★★★★☆</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="overall-assessment">
+                            <span class="overall-label">総合評価</span>
+                            <div class="overall-score">Gold League Tier 2</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * リーグランキングセクションを生成
+     */
+    static renderLeagueRankings() {
+        return `
+            <!-- リーグランキングと参加企業 -->
+            <div class="league-rankings-section">
+                <div class="rankings-container">
+                    <!-- リーグランキング -->
+                    <div class="league-rankings">
+                        <h3>Gold Leagueランキング</h3>
+                        <div class="ranking-table">
+                            <div class="rank-item top">
+                                <span class="rank">1位</span>
+                                <div class="league-tier challenger">CH</div>
+                                <span class="company">テックイノベーション㈱</span>
+                                <span class="score">3,850 LP</span>
+                            </div>
+                            <div class="rank-item">
+                                <span class="rank">2位</span>
+                                <div class="league-tier master">MA</div>
+                                <span class="company">グローバル商事㈱</span>
+                                <span class="score">3,720 LP</span>
+                            </div>
+                            <div class="rank-item">
+                                <span class="rank">3位</span>
+                                <div class="league-tier diamond">DI</div>
+                                <span class="company">安全第一工業㈱</span>
+                                <span class="score">3,580 LP</span>
+                            </div>
+                            <div class="rank-item current">
+                                <span class="rank">7位</span>
+                                <div class="league-tier gold">GO</div>
+                                <span class="company">あなたの会社</span>
+                                <span class="score">2,450 LP</span>
+                            </div>
+                            <div class="rank-item">
+                                <span class="rank">8位</span>
+                                <div class="league-tier gold">GO</div>
+                                <span class="company">製造エキスパート㈱</span>
+                                <span class="score">2,380 LP</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 直近参加企業 -->
+                    <div class="recent-participants">
+                        <h3>直近リーグ参加企業</h3>
+                        <div class="participants-list">
+                            <div class="participant-item new">
+                                <div class="participant-info">
+                                    <span class="company-name">スタートアップ企業A</span>
+                                    <span class="join-date">2024-09-20参加</span>
+                                </div>
+                                <div class="league-tier bronze">BR</div>
+                                <span class="status new-badge">NEW</span>
+                            </div>
+                            <div class="participant-item">
+                                <div class="participant-info">
+                                    <span class="company-name">地域密着企業B</span>
+                                    <span class="join-date">2024-09-18参加</span>
+                                </div>
+                                <div class="league-tier silver">SI</div>
+                                <span class="status promoted">昇格</span>
+                            </div>
+                            <div class="participant-item">
+                                <div class="participant-info">
+                                    <span class="company-name">老舗商事C</span>
+                                    <span class="join-date">2024-09-15参加</span>
+                                </div>
+                                <div class="league-tier gold">GO</div>
+                                <span class="status stable">安定</span>
+                            </div>
+                            <div class="participant-item">
+                                <div class="participant-info">
+                                    <span class="company-name">先進技術工業D</span>
+                                    <span class="join-date">2024-09-12参加</span>
+                                </div>
+                                <div class="league-tier platinum">PL</div>
+                                <span class="status rising">上昇中</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * ギルドシステムセクションを生成
+     */
+    static renderGuildSystem() {
+        return `
+            <!-- ギルドシステム -->
+            <div class="guild-system-section">
+                <h3>ギルドシステム</h3>
+                <div class="guild-overview">
+                    <!-- 所属ギルド情報 -->
+                    <div class="guild-info-card">
+                        <div class="guild-header">
+                            <div class="guild-emblem">
+                                <i class="fas fa-shield"></i>
+                            </div>
+                            <div class="guild-details">
+                                <h4>東京世田谷区卸売業ギルド</h4>
+                                <div class="guild-league">
+                                    <div class="league-tier platinum">PL</div>
+                                    <span>Platinum League</span>
+                                </div>
+                                <div class="guild-stats">
+                                    <span>メンバー: 15社</span>
+                                    <span>合計LP: 38,450</span>
+                                    <span>平均LP: 2,563</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="guild-members">
+                            <h5>ギルドメンバー</h5>
+                            <div class="members-list">
+                                <div class="member-item leader">
+                                    <span class="member-name">あなたの会社</span>
+                                    <div class="member-level">Lv.19</div>
+                                    <div class="league-tier gold">GO</div>
+                                    <span class="member-lp">2,450 LP</span>
+                                    <span class="role">リーダー</span>
+                                </div>
+                                <div class="member-item">
+                                    <span class="member-name">協力会社A</span>
+                                    <div class="member-level">Lv.22</div>
+                                    <div class="league-tier platinum">PL</div>
+                                    <span class="member-lp">3,200 LP</span>
+                                </div>
+                                <div class="member-item">
+                                    <span class="member-name">パートナー企業B</span>
+                                    <div class="member-level">Lv.18</div>
+                                    <div class="league-tier gold">GO</div>
+                                    <span class="member-lp">2,100 LP</span>
+                                </div>
+                                <div class="member-item">
+                                    <span class="member-name">関連会社C</span>
+                                    <div class="member-level">Lv.15</div>
+                                    <div class="league-tier silver">SI</div>
+                                    <span class="member-lp">1,850 LP</span>
+                                </div>
+                                <div class="member-item">
+                                    <span class="member-name">業界新人D</span>
+                                    <div class="member-level">Lv.8</div>
+                                    <div class="league-tier bronze">BR</div>
+                                    <span class="member-lp">980 LP</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ギルドランキング -->
+                    <div class="guild-rankings">
+                        <h4>ギルドランキング</h4>
+                        <div class="guild-ranking-table">
+                            <div class="guild-rank-item top">
+                                <span class="rank">1位</span>
+                                <div class="league-tier master">MA</div>
+                                <span class="guild-name">エリート企業連合</span>
+                                <span class="guild-score">52,800 LP</span>
+                                <span class="member-count">12社</span>
+                            </div>
+                            <div class="guild-rank-item">
+                                <span class="rank">2位</span>
+                                <div class="league-tier diamond">DI</div>
+                                <span class="guild-name">先進技術コンソーシアム</span>
+                                <span class="guild-score">47,200 LP</span>
+                                <span class="member-count">18社</span>
+                            </div>
+                            <div class="guild-rank-item current">
+                                <span class="rank">5位</span>
+                                <div class="league-tier platinum">PL</div>
+                                <span class="guild-name">東京世田谷区卸売業ギルド</span>
+                                <span class="guild-score">38,450 LP</span>
+                                <span class="member-count">15社</span>
+                            </div>
+                            <div class="guild-rank-item">
+                                <span class="rank">6位</span>
+                                <div class="league-tier platinum">PL</div>
+                                <span class="guild-name">関西安全協会</span>
+                                <span class="guild-score">36,900 LP</span>
+                                <span class="member-count">20社</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * 保険ポートフォリオ画面のコンテンツを生成
+     */
+    static renderInsurancePortfolioContent() {
+        return `
+            <div class="screen-header">
+                <h2>保険ポートフォリオ</h2>
+                <div class="header-actions">
+                    <button class="btn btn-primary" id="upload-policy-btn">
+                        <i class="fas fa-plus"></i>
+                        新規証券登録
+                    </button>
+                    <button class="btn btn-secondary" id="upload-document-btn">
+                        <i class="fas fa-upload"></i>
+                        証券アップロード
+                    </button>
+                </div>
+            </div>
+
+            <!-- 保険契約一覧 -->
+            <div class="insurance-table-container">
+                <h3>保険契約一覧</h3>
+                <table class="insurance-table">
+                    <thead>
+                        <tr>
+                            <th>保険種目</th>
+                            <th>商品名</th>
+                            <th>保険会社</th>
+                            <th>保険始期</th>
+                            <th>保険終期</th>
+                            <th>補償内容</th>
+                            <th>ステータス</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="alert insurance-row" data-policy-id="1">
+                            <td>火災保険</td>
+                            <td>企業総合保険</td>
+                            <td>○○損保</td>
+                            <td>2023/03/15</td>
+                            <td>2024/03/15</td>
+                            <td>建物・設備 5億円</td>
+                            <td><span class="status-warning">見直し要</span></td>
+                        </tr>
+                        <tr class="insurance-row" data-policy-id="2">
+                            <td>賠償責任保険</td>
+                            <td>PL保険</td>
+                            <td>△△海上</td>
+                            <td>2023/04/01</td>
+                            <td>2024/03/31</td>
+                            <td>対人・対物 1億円</td>
+                            <td><span class="status-ok">正常</span></td>
+                        </tr>
+                        <tr class="insurance-row" data-policy-id="3">
+                            <td>労災保険</td>
+                            <td>労災上乗せ保険</td>
+                            <td>□□生命</td>
+                            <td>2023/04/01</td>
+                            <td>2024/03/31</td>
+                            <td>死亡・後遺障害 5000万円</td>
+                            <td><span class="status-ok">正常</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 保険カバー率 -->
+            <div class="coverage-overview">
+                <h3>保険別カバー率</h3>
+                <div class="coverage-grid">
+                    <div class="coverage-item">
+                        <h4>火災</h4>
+                        <div class="coverage-circle">
+                            <div class="circle-progress" data-percent="85">
+                                <span>85%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="coverage-item">
+                        <h4>賠償</h4>
+                        <div class="coverage-circle">
+                            <div class="circle-progress" data-percent="70">
+                                <span>70%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="coverage-item">
+                        <h4>傷害・医療</h4>
+                        <div class="coverage-circle">
+                            <div class="circle-progress" data-percent="90">
+                                <span>90%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="coverage-item">
+                        <h4>自動車</h4>
+                        <div class="coverage-circle">
+                            <div class="circle-progress" data-percent="100">
+                                <span>100%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- おすすめ保険見直し -->
+            <div class="recommendations">
+                <h3>おすすめ保険見直し</h3>
+                <div class="recommendation-list">
+                    <div class="recommendation-item">
+                        <i class="fas fa-lightbulb"></i>
+                        <div class="recommendation-content">
+                            <h4>サイバーセキュリティ保険の追加</h4>
+                            <p>IT資産の増加に伴い、サイバーリスクが高まっています。年間保険料: ¥120,000〜</p>
+                        </div>
+                        <button class="recommend-btn">詳細を見る</button>
+                    </div>
+                    <div class="recommendation-item">
+                        <i class="fas fa-lightbulb"></i>
+                        <div class="recommendation-content">
+                            <h4>火災保険の補償額見直し</h4>
+                            <p>事業規模拡大により、現在の補償額では不足の可能性があります。</p>
+                        </div>
+                        <button class="recommend-btn">詳細を見る</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+}
+
+// グローバルに公開
+window.ContentRenderers = ContentRenderers;
+
+console.log('✅ ContentRenderers が読み込まれました');

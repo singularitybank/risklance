@@ -1,0 +1,545 @@
+/* Risk Lance - 保険ギャップ検出機能のスタイル */
+
+/* ギャップアラートコンテナ全体 */
+#insurance-gap-alerts-container {
+    margin-bottom: 30px;
+}
+
+/* ギャップアラート表示 */
+.gaps-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    background: linear-gradient(135deg, #fff3cd 0%, #fff8e1 100%);
+    border-radius: 12px;
+    margin: 20px 0;
+    border-left: 5px solid #ff9800;
+    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.15);
+    animation: slideInDown 0.5s ease-out;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.gaps-count {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.gaps-count i {
+    font-size: 32px;
+    color: #f57c00;
+}
+
+.gaps-count .count {
+    font-size: 42px;
+    font-weight: 800;
+    color: #f57c00;
+    line-height: 1;
+}
+
+.gaps-count .label {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+.gaps-amount {
+    text-align: right;
+    font-size: 14px;
+    color: #666;
+}
+
+.gaps-amount strong {
+    display: block;
+    font-size: 24px;
+    color: #f44336;
+    font-weight: 800;
+    margin-top: 5px;
+}
+
+/* ギャップ一覧 */
+.gaps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.gap-item {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    border-left: 5px solid #ff9800;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.gap-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.gap-item.urgent {
+    border-left-color: #f44336;
+    background: linear-gradient(to right, #ffebee 0%, white 15%);
+}
+
+.gap-item.warning {
+    border-left-color: #ff9800;
+}
+
+.gap-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.urgency-icon {
+    font-size: 24px;
+}
+
+.gap-header h4 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+}
+
+.gap-details {
+    padding: 12px 0;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 15px;
+}
+
+.gap-amount {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.gap-amount strong {
+    font-size: 20px;
+    color: #f44336;
+    font-weight: 700;
+}
+
+.gap-recommendation {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.view-detail-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.view-detail-btn:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.view-detail-btn i {
+    transition: transform 0.3s ease;
+}
+
+.view-detail-btn:hover i {
+    transform: translateX(3px);
+}
+
+/* ギャップなしメッセージ */
+.no-gaps-message {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+    border-radius: 12px;
+    border: 2px dashed #4caf50;
+    margin: 20px 0 30px 0;
+}
+
+.no-gaps-message i {
+    font-size: 48px;
+    color: #4caf50;
+    margin-bottom: 15px;
+}
+
+.no-gaps-message p {
+    font-size: 16px;
+    color: #2e7d32;
+    font-weight: 500;
+}
+
+/* ギャップ詳細モーダル */
+.gap-detail-modal {
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.gap-detail-modal .modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 25px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.gap-detail-modal.urgent .modal-header {
+    background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+}
+
+.gap-detail-modal.warning .modal-header {
+    background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);
+}
+
+.urgency-badge {
+    background: rgba(255, 255, 255, 0.3);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 15px;
+}
+
+.gap-detail-modal h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.modal-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+/* ギャップ統計 */
+.gap-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 25px 0;
+}
+
+.stat-item {
+    background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    border: 2px solid #e0e0e0;
+}
+
+.stat-item.critical {
+    background: linear-gradient(135deg, #ffebee, #ffcdd2);
+    border-color: #f44336;
+}
+
+.stat-label {
+    display: block;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.stat-value {
+    display: block;
+    font-size: 28px;
+    font-weight: 800;
+    color: #333;
+}
+
+.stat-value.highlight {
+    color: #ff9800;
+}
+
+.stat-item.critical .stat-value {
+    color: #f44336;
+}
+
+/* 月次推移チャート */
+.monthly-trend {
+    margin: 30px 0;
+    padding: 25px;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+.monthly-trend h4 {
+    margin: 0 0 20px 0;
+    font-size: 16px;
+    color: #333;
+    font-weight: 600;
+}
+
+.simple-bar-chart {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    height: 200px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    gap: 15px;
+}
+
+.chart-bar-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.chart-bar {
+    width: 100%;
+    background: linear-gradient(to top, #64b5f6, #42a5f5);
+    border-radius: 6px 6px 0 0;
+    position: relative;
+    transition: all 0.3s ease;
+    min-height: 40px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 10px;
+}
+
+.chart-bar:hover {
+    transform: scaleY(1.05);
+    box-shadow: 0 -4px 12px rgba(66, 165, 245, 0.3);
+}
+
+.chart-bar.above-threshold {
+    background: linear-gradient(to top, #ff9800, #ff5722);
+}
+
+.bar-value {
+    font-size: 11px;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;
+}
+
+.chart-label {
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+    text-align: center;
+}
+
+.threshold-line {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px dashed #ff9800;
+    text-align: center;
+}
+
+.threshold-line span {
+    display: inline-block;
+    background: #fff3cd;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #f57c00;
+    font-weight: 600;
+}
+
+.trend-note {
+    margin-top: 15px;
+    padding: 12px;
+    background: #fff3cd;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #f57c00;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.trend-note i {
+    font-size: 16px;
+}
+
+/* 推奨アクションカード */
+.gap-recommendation {
+    margin-top: 30px;
+}
+
+.gap-recommendation h3 {
+    margin: 0 0 20px 0;
+    font-size: 18px;
+    color: #333;
+    font-weight: 700;
+}
+
+.recommendation-card {
+    background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+    border: 2px solid #667eea;
+    border-radius: 12px;
+    padding: 25px;
+}
+
+.recommendation-card h4 {
+    margin: 0 0 12px 0;
+    font-size: 18px;
+    color: #667eea;
+    font-weight: 700;
+}
+
+.rec-reason {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.rec-details {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.rec-item {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+}
+
+.rec-item i {
+    font-size: 24px;
+    color: #667eea;
+    margin-top: 3px;
+}
+
+.rec-item strong {
+    display: block;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.rec-item p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.rec-item.highlight {
+    background: linear-gradient(135deg, #fff9e6, #fff3cd);
+    border: 2px solid #ffc107;
+}
+
+.rec-item.highlight i {
+    color: #f57c00;
+}
+
+/* モーダルフッター */
+.gap-detail-modal .modal-footer {
+    padding: 20px 30px;
+    background: #f8f9fa;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .gaps-summary {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .gaps-amount {
+        text-align: left;
+    }
+
+    .gap-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .simple-bar-chart {
+        height: 150px;
+        padding: 10px;
+    }
+
+    .bar-value {
+        font-size: 9px;
+    }
+
+    .chart-label {
+        font-size: 10px;
+    }
+
+    .rec-item {
+        flex-direction: column;
+    }
+
+    .gap-detail-modal .modal-footer {
+        flex-direction: column;
+    }
+
+    .gap-detail-modal .modal-footer button {
+        width: 100%;
+    }
+}
+
+/* アニメーション */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.gap-item {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.gap-item:nth-child(1) { animation-delay: 0.1s; }
+.gap-item:nth-child(2) { animation-delay: 0.2s; }
+.gap-item:nth-child(3) { animation-delay: 0.3s; }
