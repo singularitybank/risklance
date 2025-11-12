@@ -30,6 +30,12 @@ class RiskLanceApp {
             logoutBtn.addEventListener('click', () => this.handleLogout());
         }
 
+        // 管理者メニューボタン
+        const adminMenuBtn = document.getElementById('admin-menu-btn');
+        if (adminMenuBtn) {
+            adminMenuBtn.addEventListener('click', () => this.handleAdminMenuClick());
+        }
+
         // サイドバーメニュー - 動的生成されるため、showMainApp内で初期化
 
         // アクションボタン
@@ -94,6 +100,15 @@ class RiskLanceApp {
             this.currentUser = null;
             this.showLoginScreen();
         }
+    }
+
+    // 管理者メニュークリック処理
+    handleAdminMenuClick() {
+        this.switchScreen('idea-archive');
+
+        // サイドバーメニューのアクティブ状態を解除（管理者メニューはサイドバーメニューではないため）
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => item.classList.remove('active'));
     }
 
     // メニュークリック処理
@@ -219,6 +234,16 @@ class RiskLanceApp {
                     content = InsurancePortfolioContentRenderer.render();
                 }
                 break;
+            case 'idea-archive':
+                if (window.ArchiveContentRenderer) {
+                    content = ArchiveContentRenderer.render();
+                }
+                break;
+            case 'premium-companies':
+                if (window.PremiumCompaniesContentRenderer) {
+                    content = PremiumCompaniesContentRenderer.render();
+                }
+                break;
         }
 
         if (content) {
@@ -252,6 +277,28 @@ class RiskLanceApp {
             case 'insurance-portfolio':
                 this.updateInsurancePortfolio();
                 break;
+            case 'idea-archive':
+                this.updateIdeaArchive();
+                break;
+            case 'premium-companies':
+                this.updatePremiumCompanies();
+                break;
+        }
+    }
+
+    // アイデアのアーカイブ更新
+    updateIdeaArchive() {
+        // アーカイブコンテンツのイベントリスナーを設定
+        if (window.ArchiveContentRenderer) {
+            window.ArchiveContentRenderer.attachEventListeners();
+        }
+    }
+
+    // 優良企業リスト更新
+    updatePremiumCompanies() {
+        // 優良企業リストのイベントリスナーを設定
+        if (window.PremiumCompaniesContentRenderer) {
+            window.PremiumCompaniesContentRenderer.attachEventListeners();
         }
     }
 
@@ -337,6 +384,14 @@ class RiskLanceApp {
                 window.chartManager.updateInsuranceCoverageCircles();
             }, 100);
         }
+
+        // 保険契約行のイベントリスナーを設定
+        setTimeout(() => {
+            const insuranceRows = document.querySelectorAll('.insurance-row');
+            insuranceRows.forEach(row => {
+                row.addEventListener('click', (e) => this.handleInsuranceRowClick(e));
+            });
+        }, 150);
     }
 
     // ログイン画面表示

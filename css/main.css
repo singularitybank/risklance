@@ -158,7 +158,7 @@ body {
     grid-template-areas:
         "header header"
         "sidebar main";
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: 240px 1fr;
     grid-template-rows: 60px 1fr;
     height: 100vh;
     display: grid;
@@ -201,6 +201,31 @@ body {
     display: flex;
     align-items: center;
     gap: 1rem;
+}
+
+.admin-menu-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
+.admin-menu-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.5);
+}
+
+.admin-menu-btn i {
+    font-size: 1.1rem;
 }
 
 .notification-icon {
@@ -260,15 +285,26 @@ body {
 }
 
 .menu-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem 1.5rem;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
-.menu-item:hover {
+/* サブメニューがない通常のメニューアイテム */
+.menu-item:not(.has-children) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem 0.75rem 0.75rem;
+}
+
+/* サブメニューがない通常のメニューアイテムのホバー */
+.menu-item:not(.has-children):hover {
+    background-color: #34495e;
+}
+
+/* サブメニューがあるメニューアイテムのコンテンツ部分のホバー */
+.menu-item.has-children .menu-item-content:hover {
     background-color: #34495e;
 }
 
@@ -278,8 +314,13 @@ body {
 }
 
 .menu-item i {
-    font-size: 1.1rem;
-    width: 20px;
+    font-size: 1rem;
+    width: 18px;
+}
+
+.menu-item span {
+    white-space: nowrap;
+    font-size: 0.95rem;
 }
 
 /* メインコンテンツ */
@@ -366,6 +407,539 @@ h3 {
     background: #e5e7eb;
 }
 
+/* ===== アイデアのアーカイブ画面 ===== */
+.archive-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 1400px;
+}
+
+.archive-list-section h3 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+}
+
+.archive-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.archive-item {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.archive-item:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.archive-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+.archive-item-header h4 {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.archive-date {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.archive-description {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.archive-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-view-archive {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-view-archive:hover {
+    background: #1d4ed8;
+    transform: translateX(2px);
+}
+
+.btn-view-archive i {
+    font-size: 1rem;
+}
+
+.archive-detail-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--border-color);
+}
+
+/* ===== サイドバーサブメニュー ===== */
+.menu-item.has-children {
+    cursor: pointer;
+}
+
+.menu-item-content {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem 0.75rem 0.75rem;
+    width: 100%;
+}
+
+.expand-icon {
+    font-size: 0.7rem;
+    transition: transform 0.3s ease;
+    padding: 0.25rem;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-left: auto;
+}
+
+.expand-icon:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu-item.expanded .expand-icon {
+    transform: rotate(180deg);
+}
+
+.submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+}
+
+.menu-item.expanded .submenu {
+    max-height: 500px;
+    opacity: 1;
+}
+
+.submenu-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.75rem;
+    padding: 0.65rem 1rem 0.65rem 2rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    color: white;
+    font-size: 0.9rem;
+}
+
+.submenu-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.submenu-item.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.submenu-item i {
+    font-size: 0.85rem;
+}
+
+.submenu-item span {
+    white-space: nowrap;
+}
+
+/* ===== 優良企業リスト画面 ===== */
+.premium-companies-container {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.page-description {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+/* タブ */
+.tabs-container {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+    color: var(--primary-color);
+}
+
+.tab-btn.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+/* 検索フォーム */
+.search-form-container {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+}
+
+.keyword-search {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.search-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+}
+
+.filter-section h4 {
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.filter-select,
+.range-input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+}
+
+.range-inputs {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+/* 検索結果 */
+.search-results-container {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 2rem;
+}
+
+.filter-sidebar {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    height: fit-content;
+}
+
+.filter-sidebar h4 {
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+}
+
+.sidebar-filter-group {
+    margin-bottom: 1.5rem;
+}
+
+.sidebar-filter-group h5 {
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.sidebar-filter-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.results-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.company-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.company-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.company-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.company-header {
+    margin-bottom: 1rem;
+}
+
+.company-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.company-title h4 {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.favorite-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--text-light);
+    transition: color 0.3s ease;
+}
+
+.favorite-btn.active,
+.favorite-btn:hover {
+    color: var(--warning-color);
+}
+
+.company-badges {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.league-badge,
+.tier-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+}
+
+.league-badge.challenger {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+}
+
+.league-badge.master {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+}
+
+.league-badge.diamond {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.league-badge.platinum {
+    background: linear-gradient(135deg, #1abc9c, #16a085);
+}
+
+.league-badge.gold {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+.league-badge.silver {
+    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+}
+
+.league-badge.bronze {
+    background: linear-gradient(135deg, #d35400, #c0392b);
+}
+
+.tier-badge {
+    background: var(--text-light);
+}
+
+.company-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.info-item i {
+    color: var(--primary-color);
+}
+
+.company-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* ページネーション */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.page-btn {
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.page-btn:hover {
+    background: var(--bg-secondary);
+}
+
+.page-btn.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* 空の状態 */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-light);
+}
+
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+/* 企業詳細モーダル */
+.company-detail-modal .modal-content {
+    max-width: 800px;
+}
+
+.company-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.detail-section {
+    background: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+}
+
+.detail-section.full-width {
+    grid-column: 1 / -1;
+}
+
+.detail-section h4,
+.detail-section h5 {
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.detail-section p {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.contact-disabled-reason {
+    color: var(--danger-color);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+.no-contact {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* コンタクトモーダル */
+.contact-modal #contact-message {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-family: inherit;
+    font-size: 1rem;
+    resize: vertical;
+}
+
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
     #main-app {
@@ -378,5 +952,25 @@ h3 {
 
     .sidebar {
         display: none;
+    }
+
+    .archive-list {
+        grid-template-columns: 1fr;
+    }
+
+    .search-results-container {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-sidebar {
+        display: none;
+    }
+
+    .company-list {
+        grid-template-columns: 1fr;
+    }
+
+    .company-detail-grid {
+        grid-template-columns: 1fr;
     }
 }

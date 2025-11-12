@@ -28,6 +28,10 @@
                 <input type="text" placeholder="検索...">
             </div>
             <div class="header-right">
+                <button class="admin-menu-btn" id="admin-menu-btn">
+                    <i class="fas fa-user-shield"></i>
+                    <span>管理者メニュー</span>
+                </button>
                 <div class="notification-icon">
                     <i class="fas fa-bell"></i>
                     <span class="notification-badge">3</span>
@@ -76,6 +80,16 @@
             <div id="insurance-portfolio" class="content-screen">
                 <!-- コンテンツはJavaScriptで動的に生成されます -->
             </div>
+
+            <!-- アイデアのアーカイブ -->
+            <div id="idea-archive" class="content-screen">
+                <!-- コンテンツはJavaScriptで動的に生成されます -->
+            </div>
+
+            <!-- 優良企業リスト -->
+            <div id="premium-companies" class="content-screen">
+                <!-- コンテンツはJavaScriptで動的に生成されます -->
+            </div>
         </main>
     </div>
 
@@ -85,6 +99,7 @@
 
     <!-- 2. コア - データ管理 -->
     <script src="js/core/data-manager.js"></script>
+    <script src="js/core/company-data.js"></script>
 
     <!-- 3. ユーティリティ - アラート機能 -->
     <script src="js/utils/alerts.js"></script>
@@ -114,6 +129,8 @@
     <script src="js/ui/renderers/risk-analysis-content.js"></script>
     <script src="js/ui/renderers/risk-branding-content.js"></script>
     <script src="js/ui/renderers/insurance-portfolio-content.js"></script>
+    <script src="js/ui/renderers/archive.js"></script>
+    <script src="js/ui/renderers/premium-companies-content.js"></script>
 
     <!-- 11. UI - データレンダラー -->
     <script src="js/ui/renderers/dashboard-renderer.js"></script>

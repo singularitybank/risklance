@@ -35,7 +35,6 @@ class RiskBrandingContentRenderer {
             <div class="branding-overview">
                 ${this.renderLeagueStatus(brandingData.league)}
                 ${this.renderLeagueRankings(brandingData.league)}
-                ${this.renderGuildSystem(brandingData.guild)}
             </div>
         `;
     }

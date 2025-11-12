@@ -41,7 +41,16 @@ const MENU_CONFIG = {
             icon: 'fas fa-award',
             screen: 'risk-branding',
             order: 5,
-            active: false
+            active: false,
+            children: [
+                {
+                    id: 'premium-companies',
+                    label: '優良企業リスト',
+                    icon: 'fas fa-building',
+                    screen: 'premium-companies',
+                    active: false
+                }
+            ]
         }
     ],
 
